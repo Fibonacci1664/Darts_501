@@ -149,6 +149,7 @@
     <ClInclude Include="Finishes.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Match.h" />
     <ClInclude Include="MyGraphics.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>

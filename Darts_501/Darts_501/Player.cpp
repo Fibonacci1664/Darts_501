@@ -39,6 +39,8 @@ Player::Player(std::string l_name, int l_innerBullSuccessRate, int l_outerBullSu
 	m_numOfBullHit = 0;
 	m_turnsTaken = 0;
 	m_gamesWon = 0;
+	m_legsWon = 0;
+	m_matchesWon = 0;
 
 	m_isPlaying = false;
 	m_hasWon = false;
@@ -319,21 +321,21 @@ void Player::printWinFreqs(int l_numOfGamesPlayed)
 {
 	double totalGamesWinPercent = ((double)m_gamesWon / l_numOfGamesPlayed) * 100;
 
-	double sevenDartFinPercentage = ((double)m_nDartFinishes[0] / l_numOfGamesPlayed) * 100;
-	double eightDartFinPercentage = ((double)m_nDartFinishes[1] / l_numOfGamesPlayed) * 100;
-	double nineDartFinPercentage = ((double)m_nDartFinishes[2] / l_numOfGamesPlayed) * 100;
-	double tenDartFinPercentage = ((double)m_nDartFinishes[3] / l_numOfGamesPlayed) * 100;
-	double elevenDartFinPercentage = ((double)m_nDartFinishes[4] / l_numOfGamesPlayed) * 100;
-	double twelveDartFinPercentage = ((double)m_nDartFinishes[5] / l_numOfGamesPlayed) * 100;
-	double thirteenDartFinPercentage = ((double)m_nDartFinishes[6] / l_numOfGamesPlayed) * 100;
-	double fourteenDartFinPercentage = ((double)m_nDartFinishes[7] / l_numOfGamesPlayed) * 100;
-	double fifteenDartFinPercentage = ((double)m_nDartFinishes[8] / l_numOfGamesPlayed) * 100;
-	double sixteenDartFinPercentage = ((double)m_nDartFinishes[9] / l_numOfGamesPlayed) * 100;
-	double seventeenDartFinPercentage = ((double)m_nDartFinishes[10] / l_numOfGamesPlayed) * 100;
-	double eighteenDartFinPercentage = ((double)m_nDartFinishes[11] / l_numOfGamesPlayed) * 100;
-	double nineteenDartFinPercentage = ((double)m_nDartFinishes[12] / l_numOfGamesPlayed) * 100;
-	double twentyDartFinPercentage = ((double)m_nDartFinishes[13] / l_numOfGamesPlayed) * 100;
-	double twentyoneDartFinPercentage = ((double)m_nDartFinishes[14] / l_numOfGamesPlayed) * 100;
+	double sevenDartFinPercentage = ((double)m_nDartFinishes[0] / m_gamesWon) * 100;
+	double eightDartFinPercentage = ((double)m_nDartFinishes[1] / m_gamesWon) * 100;
+	double nineDartFinPercentage = ((double)m_nDartFinishes[2] / m_gamesWon) * 100;
+	double tenDartFinPercentage = ((double)m_nDartFinishes[3] / m_gamesWon) * 100;
+	double elevenDartFinPercentage = ((double)m_nDartFinishes[4] / m_gamesWon) * 100;
+	double twelveDartFinPercentage = ((double)m_nDartFinishes[5] / m_gamesWon) * 100;
+	double thirteenDartFinPercentage = ((double)m_nDartFinishes[6] / m_gamesWon) * 100;
+	double fourteenDartFinPercentage = ((double)m_nDartFinishes[7] / m_gamesWon) * 100;
+	double fifteenDartFinPercentage = ((double)m_nDartFinishes[8] / m_gamesWon) * 100;
+	double sixteenDartFinPercentage = ((double)m_nDartFinishes[9] / m_gamesWon) * 100;
+	double seventeenDartFinPercentage = ((double)m_nDartFinishes[10] / m_gamesWon) * 100;
+	double eighteenDartFinPercentage = ((double)m_nDartFinishes[11] / m_gamesWon) * 100;
+	double nineteenDartFinPercentage = ((double)m_nDartFinishes[12] / m_gamesWon) * 100;
+	double twentyDartFinPercentage = ((double)m_nDartFinishes[13] / m_gamesWon) * 100;
+	double twentyoneDartFinPercentage = ((double)m_nDartFinishes[14] / m_gamesWon) * 100;
 
 	std::cout << "\n##########  HERE ARE TOTAL THE RESULTS FOR " << m_name << "  ##########\n";
 
@@ -489,6 +491,28 @@ void Player::incrementTurnsTaken()
 int Player::getGamesWon()
 {
 	return m_gamesWon;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Player::incrementLegsWon()
+{
+	++m_legsWon;
+}
+
+int Player::getLegsWon()
+{
+	return m_legsWon;
+}
+
+void Player::setLegsWon(int l_legsWon)
+{
+	m_legsWon = l_legsWon;
+}
+
+void Player::incrementMatchesWon()
+{
+	++m_matchesWon;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -43,6 +43,8 @@ public:
 	bool searchFinishesArray();
 	int searchDartBoardArr(int l_number, int randNum);
 	void incrementGamesWon();
+	void incrementLegsWon();
+	void incrementMatchesWon();
 	void increment_N_DartFinishes();
 	void printWinFreqs(int l_numOfGamesPlayed);
 	void resetGame();
@@ -73,6 +75,9 @@ public:
 	bool getHasWon();
 	void setHasWon(bool l_hasWon);
 
+	int getLegsWon();
+	void setLegsWon(int l_legsWon);
+
 private:
 	// DATA MEMBERS
 	std::string m_name;
@@ -89,6 +94,8 @@ private:
 	int m_numOfBullHit;
 	int m_turnsTaken;
 	int m_gamesWon;
+	int m_legsWon;
+	int m_matchesWon;
 
 	DartBoard m_dartBoard;
 	int m_nDartFinishes[N_DART_FINISHES_SIZE] = { 0 };		// For tracking frequencies of n dart finishes.

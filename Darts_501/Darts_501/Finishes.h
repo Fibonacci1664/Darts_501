@@ -22,7 +22,7 @@
 
 struct Finishes
 {
-	int m_finishTotal;
+	int m_finishTotal = 0;
 	int m_dart_1[2];
 	int m_dart_2[2];
 	int m_dart_3[2];

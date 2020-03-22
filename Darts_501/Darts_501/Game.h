@@ -19,6 +19,7 @@
 #include<vector>
 #include "Player.h"
 #include "MyGraphics.h"
+#include "Match.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +34,10 @@ public:
 	void playDarts();
 	void whoIsThrowingFirst();
 	void showTitle();
-	//void showCheckOutTable();
+	void showDartArt();
+	void printGameOptions();
+	void chooseGame(int l_gameChoice);
+	void printMatchResults();
 
 	// GETTERS & SETTERS.
 	int getGamesToPlay();
@@ -52,10 +56,13 @@ public:
 private:
 	// DATA MEMBERS.
 	std::vector<Player> m_players;
+	std::vector<Match> m_matchResults;
 	int m_gamesToPlay;
+	int m_matchesPlayed;
 	int m_gamesPlayed;
 	int m_numOfPlayers;
 	MyGraphics m_graphics;
+	int m_gameChoice;
 
 	std::string m_playingFirstName;
 
@@ -65,7 +72,6 @@ private:
 	void autoInitPlayers();
 	void initPlayers();
 	void determineWinner();
-	void overallWinner();
 	void takeTurn(Player& l_player);
 	void swapTurns();
 };

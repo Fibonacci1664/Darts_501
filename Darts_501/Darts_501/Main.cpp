@@ -34,13 +34,6 @@ void windowProcess(sf::RenderWindow* window)
 // MAIN
 int main()
 {
-	//Create the window.
-	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "CHECKOUT TABLE");
-	window.setPosition(sf::Vector2i(1900 - WINDOW_WIDTH, 200));
-
-	// Initialise input and level objects.
-	Level level(&window);
-
 	static bool seeded = false;
 
 	if (!seeded)
@@ -49,9 +42,15 @@ int main()
 		seeded = true;
 	}
 
+	//Create the window.
+	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "CHECKOUT TABLE");
+	window.setPosition(sf::Vector2i(1900 - WINDOW_WIDTH, 200));
+
+	// Initialise input and level objects.
+	Level level(&window);
 	MyGraphics graphics;
 
-	graphics.publicShowConsoleCursor(false);		// Disable the output windows cursor from blinking.
+	//graphics.publicShowConsoleCursor(false);		// Disable the output windows cursor from blinking.
 	graphics.publicSetColor(14, 0);					// Set colour to yellow on black.
 
 	bool gameCreated = false;	
@@ -65,6 +64,10 @@ int main()
 		// Call standard game loop functions (input, update and render).
 		level.render();
 
+		/*
+		 * This was required because if a game was created before the level then the darts checkout image
+		 * would not render and the SFML window would simply be a white window.
+		 */
 		if (!gameCreated)
 		{
 			// Fixed at two players only. If more players are passed, this is checked and causes an error and the program to exit.
@@ -78,8 +81,29 @@ int main()
 			Game game(numOfPlayers, gamesToPlay, graphics);
 
 			gameCreated = true;
-		}
 
-		//game.playDarts();
+			if (!(game.getIsRunning()))
+			{
+				return 0;
+			}
+			else
+			{
+				if (numOfPlayers > 1)
+				{
+					// Decide who goes first.
+					game.whoIsThrowingFirst();
+				}
+
+				// MAIN GAME LOOP.
+				while (game.getGamesPlayed() < gamesToPlay)
+				{
+					game.playDarts();
+				}
+
+				game.printMatchResults();
+			}			
+		}
 	}
+
+	return 0;
 }

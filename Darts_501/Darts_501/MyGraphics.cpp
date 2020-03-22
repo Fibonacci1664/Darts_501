@@ -260,9 +260,9 @@ void MyGraphics::clearScreenFull()
 
 	int xPos = 0;
 
-	for (int index = 0; index < 3; index++)										// Clear all of the screen as a block of blank text.
+	for (int index = 0; index < 30; index++)										// Clear all of the screen as a block of blank text.
 	{
-		MyGraphics::drawString(xPos, index, "                                                                                      ");
+		MyGraphics::drawString(xPos, index, "                                                                                             ");
 	}
 
 	std::cout << '\n';

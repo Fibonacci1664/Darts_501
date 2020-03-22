@@ -25,6 +25,8 @@ Game::Game(int l_numOfPlayers, int l_gamesToPlay, MyGraphics l_graphics) :
 	m_numOfPlayers(l_numOfPlayers), m_gamesToPlay(l_gamesToPlay), m_gamesPlayed(0), m_graphics(l_graphics)
 {
 	m_isRunning = true;
+	m_gameChoice = 0;
+	m_matchesPlayed = 0;
 
 	// Carrry out basic validation to ensure maximum of 2 players only.
 	if (m_numOfPlayers > 2)
@@ -34,18 +36,11 @@ Game::Game(int l_numOfPlayers, int l_gamesToPlay, MyGraphics l_graphics) :
 		return;
 	}
 
+	printGameOptions();
+	showDartArt();
 	showTitle();
 	Sleep(1000);
-	bool screenCleared = m_graphics.publicClearTitleScreen();
-
-	if (screenCleared)
-	{
-		// Use this for auto creation of players. (MAX TWO PLAYERS)
-		//autoInitPlayers();
-
-		// Use this for manually entering players names and success rates.
-		initPlayers();
-	}	
+	bool screenCleared = m_graphics.publicClearTitleScreen();	
 }
 
 Game::~Game()
@@ -54,6 +49,70 @@ Game::~Game()
 }
 
 /////////////////////////////////////////////////////////////////////////
+
+void Game::printGameOptions()
+{
+	do
+	{
+		std::cout << "Please choose from the following options:> \n"
+			<< "\t1. Fully automated simulated.\n"
+			<< "\t\t-	Simulation of a game of 501.\n"
+			<< "\t\t-	Two Players.\n"
+			<< "\t\t-	Pre-programmed success rates.\n"
+			<< "\t2. Manual simulation.\n"
+			<< "\t\t-	Simulation of a game of 501.\n"
+			<< "\t\t-	Two Players.\n"
+			<< "\t\t-	User entered success rates.\n"
+			<< "\t3. Interactive game.\n"
+			<< "\t\t-	Interactive game of 501.\n"
+			<< "\t\t-	Two players; User and Computer; User enters their own success rates.\n"
+			<< "\t\t-	Computer has pre-programmed success rates.\n"
+			<< "\n:> ";
+
+		std::cin >> m_gameChoice;
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+	} while (!std::cin.good() || (m_gameChoice > 3 || m_gameChoice < 1));
+
+	chooseGame(m_gameChoice);	
+}
+
+void Game::chooseGame(int l_gameChoice)
+{
+	std::cout << "this works\n";
+
+	if (l_gameChoice == 1)
+	{
+		// Use this for auto creation of players. (MAX TWO PLAYERS)
+		autoInitPlayers();
+	}
+	else if (l_gameChoice == 2)
+	{
+		// Use this for manually entering players names and success rates.
+		initPlayers();
+	}
+	else
+	{
+		std::cout << "Interactive game not built yet.\n";
+	}
+
+	m_graphics.publicClearScreenFull();
+}
+
+void Game::showDartArt()
+{
+	// We have this so we can pass by ref, not copy values.
+	int xPos1 = 0;
+	int xPos2 = 83;
+
+	m_graphics.publicDrawString(xPos1, 0, "                       /''''''''''\\\n");			// 40 hashes
+	m_graphics.publicDrawString(xPos1, 1, "----={{{{{{{}<<<<<====<------------>\n");
+	m_graphics.publicDrawString(xPos1, 2, "                       \\,,,,,,,,,,/\n");
+
+	m_graphics.publicDrawString(xPos2, 0, " /''''''''''\\\n");			
+	m_graphics.publicDrawString(xPos2, 1, "<------------>====>>>>>{}}}}}}}=----\n");		// 40 hashes
+	m_graphics.publicDrawString(xPos2, 2, " \\,,,,,,,,,,/ \n");
+}
 
 void Game::showTitle()
 {
@@ -107,81 +166,49 @@ void Game::initPlayers()
 
 		do
 		{
-			//m_myGame.publicDrawString(xPos, 0, "This is a test\n");
-			/*if (i == 0)
-			{
-				m_myGame.publicDrawString(xPos, 0, "Please enter players name:> ");
-			}
-			else
-			{
-				m_myGame.publicDrawString(xPos, 0, "Please enter next players name:> ");
-			}*/
-
 			std::cout << "Please enter the name of Player " << (i + 1) << ":> ";
 			std::cin >> name;
 		} while (!isalpha(name[0]));
 
-		//m_myGame.publicClearScreenFull();
-
 		do
 		{
-			//m_myGame.publicDrawString(xPos, 0, "This is a second test\n");
-			//m_myGame.publicDrawString(xPos, 0, "Now please enter their percentage success rate of hitting an inner bull (50):> ");
 			std::cout << "\nNow please enter the percentage success rate of hitting an inner bull (50) for " << name << ":> ";
 			std::cin.clear();							// Clear any previous input error flags that were set.
 			std::cin.ignore(1000, '\n');				// Then ignore 1000 characters or until a new line is found.
 			std::cin >> innerBullSuccessRate;
 		} while (!std::cin.good());						// While the input is not good, i.e. it is not of the data type that was expected. Keep asking.
 
-		//m_myGame.publicClearScreenFull();
-
 		do
 		{
-			//m_myGame.publicDrawString(xPos, 0, "This is a third test\n");
-			//m_myGame.publicDrawString(xPos, 0, "Now please enter their percentage success rate of hitting an outer bull (25):> ");
 			std::cout << "\nNow please enter the percentage success rate of hitting an outer bull (25) for " << name << ":> ";
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 			std::cin >> outerBullSuccessRate;
 		} while (!std::cin.good());
 
-		//m_myGame.publicClearScreenFull();
-
 		do
 		{
-			//m_myGame.publicDrawString(xPos, 0, "This is a forth test\n");
-			//m_myGame.publicDrawString(xPos, 0, "Now please enter their percentage success rate of hitting singles:> ");
 			std::cout << "\nNow please enter the percentage success rate of hitting singles for " << name << ":> ";
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 			std::cin >> singleSuccessRate;
 		} while (!std::cin.good());
 
-		//m_myGame.publicClearScreenFull();
-
 		do
 		{
-			//m_myGame.publicDrawString(xPos, 0, "This is a fifth test\n");
-			//m_myGame.publicDrawString(xPos, 0, "Now please enter their percentage success rate of hitting doubles:> ");
 			std::cout << "\nNow please enter the percentage success rate of hitting doubles for " << name << ":> ";
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 			std::cin >> doubleSuccessRate;
 		} while (!std::cin.good());
 
-		//m_myGame.publicClearScreenFull();
-
 		do
 		{
-			//m_myGame.publicDrawString(xPos, 0, "This is a sixth test\n");
-			//m_myGame.publicDrawString(xPos, 0, "Now please enter their percentage success rate of hitting trebles:> ");
 			std::cout << "\nNow please enter the percentage success rate of hitting trebles for " << name << ":> ";
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 			std::cin >> trebleSuccessRate;
 		} while (!std::cin.good());
-
-		//m_myGame.publicClearScreenFull();
 
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
@@ -200,7 +227,6 @@ void Game::whoIsThrowingFirst()
 
 	do
 	{
-		//m_myGame.publicDrawString(xPos, 0, "Who would you like to throw first?\n");
 		std::cout << "\nWho would you like to throw first ";
 
 		// Print names of players.
@@ -226,12 +252,6 @@ void Game::whoIsThrowingFirst()
 
 void Game::playDarts()
 {
-	int xPos = 0;
-
-	/*m_myGame.publicDrawString(xPos, 0, "\n");
-	m_myGame.publicDrawString(xPos, 0, "\n##########################   Game: " + getGamesPlayed() + 1);
-	m_myGame.publicDrawString(xPos, 0, "\n");*/
-
 	std::cout << '\n';
 	std::cout << "\n##########  Game: " << getGamesPlayed() + 1 << "  ##########\n";
 	std::cout << '\n';
@@ -285,40 +305,73 @@ void Game::playDarts()
 
 void Game::determineWinner()
 {
-	int xPos = 0;
-
 	// Who has won.
 	if (m_players[0].getHasWon())
 	{
 		std::cout << "\n##########  " << m_players[0].getName() << " HAS WON!  ##########\n";
-		//m_myGame.publicDrawString(xPos, 0, "\n" + m_players[0].getName() + " HAS WON!  ##########\n");
-		//m_players[0].calculateAvg();
 	}
 	else if (m_players[1].getHasWon())
 	{
 		std::cout << "\n##########  " << m_players[1].getName() << " HAS WON!  ##########\n";
-		//m_myGame.publicDrawString(xPos, 0, "\n" + m_players[1].getName() + " HAS WON!  ##########\n");
-		//m_players[1].calculateAvg();
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void Game::overallWinner()
+void Game::printMatchResults()
 {
-	// No implementation yet!
+	/*
+	 * Result 1 will ALWAYS be player 1 score and result 2 will ALWAYS be players 2 score
+	 * this is due to how they are populated in the Match vector in the takeTurn function.
+	 */
+	
+	/*
+	 * This number below will always be slightly less than the number of actual games that were played (maybe) due to the varying scores not exactly
+	 * tallying up with the total games to play, e.g. the game may be set to play 100 games however due to varying scores 7 : 4, 3 : 7 etc
+	 * we end up in a situation were were starting a new match on the 95th game for example and then the 100 game limit is reached before
+	 * anyone can win that last match, therefore it is not accurate to calculate frequencies from games played as this is not the total that
+	 * would result is one added up all the players legs, 7 : 4 (11), 3 : 7 (10), and so on, one could be very lucky and land on exactly 100
+	 * but either way calculating this below would still then result in the correct number of games that actually matter.
+	 * HOPE THAT MADE SENSE.
+	 */
+	//double completeMatchesPlayed = 0;
+	//double sum = 0;
+
+	//for (int i = 0; i < m_matchResults.size(); ++i)
+	//{
+	//	// This accounts for any match scores that are repeated.
+	//	if (m_matchResults[i].tally > 1)
+	//	{
+	//		for (int j = 0; j < m_matchResults[i].tally; ++j)
+	//		{
+	//			sum = (double)m_matchResults[i].result_1 + (double)m_matchResults[i].result_2;
+	//		    completeMatchesPlayed += sum;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		sum = (double)m_matchResults[i].result_1 + (double)m_matchResults[i].result_2;
+	//		completeMatchesPlayed += sum;
+	//	}
+	//}
+
+	std::cout << "\nComplete matches played : " << m_matchesPlayed << " in : " << m_gamesToPlay << " games.\n";
+
+	std::cout << "\n\t" << m_players[0].getName() << "\t : \t" << m_players[1].getName() << "\t\t Frequency\n";
+	
+	for (int i = 0; i < m_matchResults.size(); ++i)
+	{
+		std::cout << "\n\t " << m_matchResults[i].result_1 << "\t : \t " << m_matchResults[i].result_2 << "\t\t    " << ((double)m_matchResults[i].tally / m_matchesPlayed) * 100 << "%\n";
+	}	
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 void Game::takeTurn(Player& l_player)
 {
-	int xPos = 0;
-
 	if (l_player.getIsPlaying())
 	{
 		std::cout << "\n##########  " << l_player.getName() << " Turn " << "  ##########" << '\n';
-		//m_myGame.publicDrawString(xPos, count, "\n##########  " + l_player.getName() + " Turn  ##########\n");
 
 		if (m_numOfPlayers > 1)
 		{
@@ -331,10 +384,7 @@ void Game::takeTurn(Player& l_player)
 		while (l_player.getDartsThrownInRnd() < l_player.getNumOfDartsToThrow())
 		{
 			std::cout << l_player.getName() << " score : " << l_player.getRemainingScore() << '\n';
-			//m_myGame.publicDrawString(xPos, (count + 1), "\n" + l_player.getName() + " score : " + std::to_string(l_player.getRemainingScore()));
-
 			int numberHit = 0;
-
 			int scoreRemaining = l_player.getRemainingScore();
 
 			// If our score is greater than 170, i.e. no potential finish, then simply throw for treble 20's
@@ -342,7 +392,6 @@ void Game::takeTurn(Player& l_player)
 			{
 				numberHit = l_player.throwDart(20, 't');		// Throw for a treble 't' 20.
 				std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
-				//m_myGame.publicDrawString(xPos, (count + 2), "\nDart number " + std::to_string(l_player.getDartsThrownInRnd()) + " scored: " + std::to_string(numberHit) + "\n");
 				l_player.setRemainingScore(l_player.getRemainingScore() - numberHit);
 			}
 			else              // Score must be <= 170
@@ -357,13 +406,11 @@ void Game::takeTurn(Player& l_player)
 				{
 					numberHit = l_player.throwDart(20, 't');
 					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
-					//m_myGame.publicDrawString(xPos, (count + 3), "\nDart number " + std::to_string(l_player.getDartsThrownInRnd()) + " scored: " + std::to_string(numberHit) + "\n");
 				}
 				else
 				{
 					numberHit = l_player.throwForFinish();
 					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
-					//m_myGame.publicDrawString(xPos, (count + 4), "\nDart number " + std::to_string(l_player.getDartsThrownInRnd()) + " scored: " + std::to_string(numberHit) + "\n");
 				}
 
 				/*
@@ -373,7 +420,6 @@ void Game::takeTurn(Player& l_player)
 				{
 					l_player.setRemainingScore(l_player.getRemainingScore());	// Player must have bust, so score remains at whatever it was.
 					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " BUST!  ##########\n";
-					//m_myGame.publicDrawString(xPos, (count + 5), "\nDart number " + std::to_string(l_player.getDartsThrownInRnd()) + " BUST! ##########\n");
 				}
 				else
 				{
@@ -396,7 +442,59 @@ void Game::takeTurn(Player& l_player)
 						}
 
 						l_player.setHasWon(true);
-						l_player.incrementGamesWon();
+						l_player.incrementGamesWon();			// Used for tracking n-darts finish frequencies.
+						l_player.incrementLegsWon();			// Used for tracking leg/match winning frequencies.
+
+						// If the player has won 7 legs they have won a match, this is tallied and legs for both players are reset to 0.
+						if (l_player.getLegsWon() == 7)
+						{
+							Match results;
+							results.result_1 = m_players[0].getLegsWon();
+							results.result_2 = m_players[1].getLegsWon();
+							results.tally += 1;
+
+							/*
+							 * This ensures we populate the vector with the first set of results, and thereafter we are then checking against those and subsequent results
+							 * If we finsd a match, increase the tally for those results otherwise, push back the new results onto the end of the vector.
+							 * There are only 12 possible combinations of results. So the vector should NEVER end up larger than 12 elements.
+							 */
+							if (m_matchResults.size() == 0)
+							{
+								m_matchResults.push_back(results);
+							}
+							else
+							{
+								bool matchFound = false;
+
+								for (int i = 0; i < m_matchResults.size(); ++i)
+								{
+									// Check if we have these exact results already, if so increment the tally.
+									if (m_matchResults[i].result_1 == results.result_1 && m_matchResults[i].result_2 == results.result_2)
+									{
+										// We found a matching score so just add one to the tally for this result and get the hell out of this loop.
+										m_matchResults[i].tally += 1;
+										matchFound = true;
+										break;
+									}									
+								}
+
+								// If we haven't found a match then we must have a new result out of the 12 possibilities.
+								if (!matchFound)
+								{
+									/*
+									 * If we dont break out here after adding a new element this new result will be accounted for in the for loops condition and we will continue to check
+									 * beacuse we are not at m_matchResults.size() yet due to just adding another element, this ends up resulting in a match for the above if statement which
+									 * will then tally incorrectly.
+									 */
+									m_matchResults.push_back(results);
+								}
+							}	
+						
+							m_players[0].setLegsWon(0);
+							m_players[1].setLegsWon(0);
+							++m_matchesPlayed;
+						}
+
 						l_player.increment_N_DartFinishes();
 						break;
 					}
