@@ -5,7 +5,7 @@
 #include "Level.h"
 #include "Game.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const int WINDOW_WIDTH = 675;
 const int WINDOW_HEIGHT = 675;
@@ -30,6 +30,8 @@ void windowProcess(sf::RenderWindow* window)
 		}
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // MAIN
 int main()
@@ -72,13 +74,13 @@ int main()
 		{
 			// Fixed at two players only. If more players are passed, this is checked and causes an error and the program to exit.
 			int numOfPlayers = 2;
-			int gamesToPlay = 100;
+			int matchesToPlay = 100;
 
 			/*
 			 * Create a game with 2 players to play 1000 games(not rounds), each game consists of xyz amount of rounds,
 			 * dependant on how long it takes a player to win.
 			 */
-			Game game(numOfPlayers, gamesToPlay, graphics);
+			Game game(numOfPlayers, matchesToPlay, graphics);
 
 			gameCreated = true;
 
@@ -95,7 +97,7 @@ int main()
 				}
 
 				// MAIN GAME LOOP.
-				while (game.getGamesPlayed() < gamesToPlay)
+				while (game.getMatchesPlayed() < matchesToPlay)
 				{
 					game.playDarts();
 				}
@@ -107,3 +109,4 @@ int main()
 
 	return 0;
 }
+// End Main.

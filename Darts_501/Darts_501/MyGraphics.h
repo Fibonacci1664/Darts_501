@@ -1,3 +1,14 @@
+/*
+ * Graphcis.cpp
+ *
+ * A small class to handle some of the more purely graphics related stuff in the game, buffers etc.
+ *
+ * Created on: 28 Oct 2019
+ *	   Author: © D. Green.
+ */
+
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 // INCLUDES
@@ -10,6 +21,8 @@
 #include <time.h> 
 #include <string> 
 #include <iostream>
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class MyGraphics
 {
@@ -41,6 +54,4 @@ private:
 	void clearGameOverScreen();
 	void clearScreenFull();
 	void clearScreenHalf();
-	//void resizeConsoleWindow();
 };
-

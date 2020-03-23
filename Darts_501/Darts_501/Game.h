@@ -23,10 +23,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 class Game
 {
 public:
+	// CONSTRUCTORS & DESTRUCTOR.
 	Game(int l_numOfPlayers, int l_gamesToPlay, MyGraphics l_graphics);
 	~Game();
 
@@ -39,10 +39,7 @@ public:
 	void chooseGame(int l_gameChoice);
 	void printMatchResults();
 
-	// GETTERS & SETTERS.
-	int getGamesToPlay();
-	void setGamesToPlay(int l_gamesToPlay);
-
+	// GETTERS & SETTERS
 	int getGamesPlayed();
 	void setGamesPlayed(int l_gamesPlayed);
 
@@ -53,18 +50,22 @@ public:
 	bool getIsRunning();
 	void setIsRunning(bool l_isRunning);
 
+	int getMatchesPlayed();
+
 private:
 	// DATA MEMBERS.
 	std::vector<Player> m_players;
 	std::vector<Match> m_matchResults;
-	int m_gamesToPlay;
+
+	MyGraphics m_graphics;
+
+	std::string m_playingFirstName;
+
+	int m_matchesToPlay;
 	int m_matchesPlayed;
 	int m_gamesPlayed;
 	int m_numOfPlayers;
-	MyGraphics m_graphics;
 	int m_gameChoice;
-
-	std::string m_playingFirstName;
 
 	bool m_isRunning;
 
@@ -75,4 +76,3 @@ private:
 	void takeTurn(Player& l_player);
 	void swapTurns();
 };
-

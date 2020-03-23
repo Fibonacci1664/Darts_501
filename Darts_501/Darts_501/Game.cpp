@@ -18,11 +18,11 @@
 #include <iostream>
 #include "MyGraphics.h"
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // CONSTRUCTORS & DESTRUCTOR.
-Game::Game(int l_numOfPlayers, int l_gamesToPlay, MyGraphics l_graphics) :
-	m_numOfPlayers(l_numOfPlayers), m_gamesToPlay(l_gamesToPlay), m_gamesPlayed(0), m_graphics(l_graphics)
+Game::Game(int l_numOfPlayers, int l_matchesToPlay, MyGraphics l_graphics) :
+	m_numOfPlayers(l_numOfPlayers), m_matchesToPlay(l_matchesToPlay), m_gamesPlayed(0), m_graphics(l_graphics)
 {
 	m_isRunning = true;
 	m_gameChoice = 0;
@@ -40,7 +40,7 @@ Game::Game(int l_numOfPlayers, int l_gamesToPlay, MyGraphics l_graphics) :
 	showDartArt();
 	showTitle();
 	Sleep(1000);
-	bool screenCleared = m_graphics.publicClearTitleScreen();	
+	m_graphics.publicClearTitleScreen();	
 }
 
 Game::~Game()
@@ -48,8 +48,9 @@ Game::~Game()
 	std::cout << "Game object destroyed!\n";
 }
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// FUNCTIONS.
 void Game::printGameOptions()
 {
 	do
@@ -77,6 +78,8 @@ void Game::printGameOptions()
 	chooseGame(m_gameChoice);	
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::chooseGame(int l_gameChoice)
 {
 	std::cout << "this works\n";
@@ -99,6 +102,8 @@ void Game::chooseGame(int l_gameChoice)
 	m_graphics.publicClearScreenFull();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::showDartArt()
 {
 	// We have this so we can pass by ref, not copy values.
@@ -114,6 +119,8 @@ void Game::showDartArt()
 	m_graphics.publicDrawString(xPos2, 2, " \\,,,,,,,,,,/ \n");
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::showTitle()
 {
 	int xPos = 37;
@@ -125,7 +132,8 @@ void Game::showTitle()
 	m_graphics.publicDrawString(xPos, 4, "#############################################\n");
 }
 
-// FUNCTIONS.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::autoInitPlayers()
 {
 	if (m_numOfPlayers > 1)
@@ -143,7 +151,7 @@ void Game::autoInitPlayers()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::initPlayers()
 {
@@ -217,8 +225,9 @@ void Game::initPlayers()
 		m_players.push_back(Player(name, innerBullSuccessRate, outerBullSuccessRate, singleSuccessRate, doubleSuccessRate, trebleSuccessRate));
 	}
 }
+// End initPlayers().
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::whoIsThrowingFirst()
 {
@@ -248,7 +257,7 @@ void Game::whoIsThrowingFirst()
 	setWhoIsPlayingFirst(first);
 }
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::playDarts()
 {
@@ -292,7 +301,7 @@ void Game::playDarts()
 		m_players[0].resetGame();
 	}
 
-	if (m_gamesPlayed == m_gamesToPlay)
+	if (m_matchesPlayed == m_matchesToPlay)
 	{
 		for (int i = 0; i < m_numOfPlayers; ++i)
 		{
@@ -300,72 +309,9 @@ void Game::playDarts()
 		}
 	}
 }
+// End playDarts().
 
-/////////////////////////////////////////////////////////////////////////
-
-void Game::determineWinner()
-{
-	// Who has won.
-	if (m_players[0].getHasWon())
-	{
-		std::cout << "\n##########  " << m_players[0].getName() << " HAS WON!  ##########\n";
-	}
-	else if (m_players[1].getHasWon())
-	{
-		std::cout << "\n##########  " << m_players[1].getName() << " HAS WON!  ##########\n";
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void Game::printMatchResults()
-{
-	/*
-	 * Result 1 will ALWAYS be player 1 score and result 2 will ALWAYS be players 2 score
-	 * this is due to how they are populated in the Match vector in the takeTurn function.
-	 */
-	
-	/*
-	 * This number below will always be slightly less than the number of actual games that were played (maybe) due to the varying scores not exactly
-	 * tallying up with the total games to play, e.g. the game may be set to play 100 games however due to varying scores 7 : 4, 3 : 7 etc
-	 * we end up in a situation were were starting a new match on the 95th game for example and then the 100 game limit is reached before
-	 * anyone can win that last match, therefore it is not accurate to calculate frequencies from games played as this is not the total that
-	 * would result is one added up all the players legs, 7 : 4 (11), 3 : 7 (10), and so on, one could be very lucky and land on exactly 100
-	 * but either way calculating this below would still then result in the correct number of games that actually matter.
-	 * HOPE THAT MADE SENSE.
-	 */
-	//double completeMatchesPlayed = 0;
-	//double sum = 0;
-
-	//for (int i = 0; i < m_matchResults.size(); ++i)
-	//{
-	//	// This accounts for any match scores that are repeated.
-	//	if (m_matchResults[i].tally > 1)
-	//	{
-	//		for (int j = 0; j < m_matchResults[i].tally; ++j)
-	//		{
-	//			sum = (double)m_matchResults[i].result_1 + (double)m_matchResults[i].result_2;
-	//		    completeMatchesPlayed += sum;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		sum = (double)m_matchResults[i].result_1 + (double)m_matchResults[i].result_2;
-	//		completeMatchesPlayed += sum;
-	//	}
-	//}
-
-	std::cout << "\nComplete matches played : " << m_matchesPlayed << " in : " << m_gamesToPlay << " games.\n";
-
-	std::cout << "\n\t" << m_players[0].getName() << "\t : \t" << m_players[1].getName() << "\t\t Frequency\n";
-	
-	for (int i = 0; i < m_matchResults.size(); ++i)
-	{
-		std::cout << "\n\t " << m_matchResults[i].result_1 << "\t : \t " << m_matchResults[i].result_2 << "\t\t    " << ((double)m_matchResults[i].tally / m_matchesPlayed) * 100 << "%\n";
-	}	
-}
-
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::takeTurn(Player& l_player)
 {
@@ -423,7 +369,7 @@ void Game::takeTurn(Player& l_player)
 				}
 				else
 				{
-					l_player.setRemainingScore(l_player.getRemainingScore() - numberHit);
+					l_player.setRemainingScore(l_player.getRemainingScore() - numberHit);				// Reduce score by number hit amount.
 
 					// Check if weve won (checked out).
 					if (l_player.getRemainingScore() == 0)		// We must have finshed.
@@ -443,56 +389,66 @@ void Game::takeTurn(Player& l_player)
 
 						l_player.setHasWon(true);
 						l_player.incrementGamesWon();			// Used for tracking n-darts finish frequencies.
-						l_player.incrementLegsWon();			// Used for tracking leg/match winning frequencies.
+						l_player.incrementLegsWon();			// Used for tracking leg/sets/match winning frequencies.
 
-						// If the player has won 7 legs they have won a match, this is tallied and legs for both players are reset to 0.
+						// If the player has won 7 legs they have won a set, this is tallied and legs for both players are reset to 0.
 						if (l_player.getLegsWon() == 7)
 						{
-							Match results;
-							results.result_1 = m_players[0].getLegsWon();
-							results.result_2 = m_players[1].getLegsWon();
-							results.tally += 1;
-
-							/*
-							 * This ensures we populate the vector with the first set of results, and thereafter we are then checking against those and subsequent results
-							 * If we finsd a match, increase the tally for those results otherwise, push back the new results onto the end of the vector.
-							 * There are only 12 possible combinations of results. So the vector should NEVER end up larger than 12 elements.
-							 */
-							if (m_matchResults.size() == 0)
-							{
-								m_matchResults.push_back(results);
-							}
-							else
-							{
-								bool matchFound = false;
-
-								for (int i = 0; i < m_matchResults.size(); ++i)
-								{
-									// Check if we have these exact results already, if so increment the tally.
-									if (m_matchResults[i].result_1 == results.result_1 && m_matchResults[i].result_2 == results.result_2)
-									{
-										// We found a matching score so just add one to the tally for this result and get the hell out of this loop.
-										m_matchResults[i].tally += 1;
-										matchFound = true;
-										break;
-									}									
-								}
-
-								// If we haven't found a match then we must have a new result out of the 12 possibilities.
-								if (!matchFound)
-								{
-									/*
-									 * If we dont break out here after adding a new element this new result will be accounted for in the for loops condition and we will continue to check
-									 * beacuse we are not at m_matchResults.size() yet due to just adding another element, this ends up resulting in a match for the above if statement which
-									 * will then tally incorrectly.
-									 */
-									m_matchResults.push_back(results);
-								}
-							}	
-						
+							l_player.incrementSetsWon();
 							m_players[0].setLegsWon(0);
 							m_players[1].setLegsWon(0);
-							++m_matchesPlayed;
+
+							// If the player has won 7 sets they have won a match.
+							if (l_player.getSetsWon() == 7)
+							{
+								Match results;
+								results.result_1 = m_players[0].getSetsWon();
+								results.result_2 = m_players[1].getSetsWon();
+								results.tally += 1;
+
+								/*
+								 * This ensures we populate the vector with the first set of results, and thereafter we are then checking against those and subsequent results
+								 * If we find a match, increase the tally for those results otherwise, push back the new results onto the end of the vector.
+								 * There are only 12 possible combinations of results. So the vector should NEVER end up larger than 12 elements.
+								 */
+								if (m_matchResults.size() == 0)
+								{
+									m_matchResults.push_back(results);
+								}
+								else
+								{
+									bool matchFound = false;
+
+									for (int i = 0; i < m_matchResults.size(); ++i)
+									{
+										// Check if we have these exact results already, if so increment the tally.
+										if (m_matchResults[i].result_1 == results.result_1 && m_matchResults[i].result_2 == results.result_2)
+										{
+											// We found a matching score so just add one to the tally for this result and get the hell out of this loop.
+											m_matchResults[i].tally += 1;
+											matchFound = true;
+											break;
+										}
+									}
+
+									// If we haven't found a match then we must have a new result out of the 12 possibilities.
+									if (!matchFound)
+									{
+										/*
+										 * If we dont break out here after adding a new element this new result will be accounted for in the for loops condition and we will continue to check
+										 * beacuse we are not at m_matchResults.size() yet due to just adding another element, this ends up resulting in a match for the above if statement which
+										 * will then tally incorrectly.
+										 */
+										m_matchResults.push_back(results);
+									}
+								}
+
+								// By this point a match has been won, increment the amount of matches played and reset the amount of sets won back to zero
+								l_player.incrementMatchesWon();
+								++m_matchesPlayed;
+								m_players[0].setSetsWon(0);
+								m_players[1].setSetsWon(0);
+							}	
 						}
 
 						l_player.increment_N_DartFinishes();
@@ -506,8 +462,24 @@ void Game::takeTurn(Player& l_player)
 		l_player.incrementTurnsTaken();
 	}
 }
+// End takeTurn().
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::determineWinner()
+{
+	// Who has won.
+	if (m_players[0].getHasWon())
+	{
+		std::cout << "\n##########  " << m_players[0].getName() << " HAS WON!  ##########\n";
+	}
+	else if (m_players[1].getHasWon())
+	{
+		std::cout << "\n##########  " << m_players[1].getName() << " HAS WON!  ##########\n";
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::swapTurns()
 {
@@ -524,43 +496,60 @@ void Game::swapTurns()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::printMatchResults()
+{
+	/*
+	 * First to 7 legs in 1 set.
+	 * First to 7 sets in 1 match.
+	 * Even a small number of matches can result in thousands of individual 501 games being played.
+	 */
+
+	 /*
+	  * Result 1 will ALWAYS be player 1 score and result 2 will ALWAYS be players 2 score
+	  * this is due to how they are populated in the Match vector in the takeTurn function.
+	  */
+
+	std::cout << "\nComplete matches played : " << m_matchesPlayed << " over : " << getGamesPlayed() << " games.\n";
+
+	std::cout << "\n\t" << m_players[0].getName() << "\t : \t" << m_players[1].getName() << "\t\t Frequency\n";
+
+	// Loop over all match results calculating and printing each result and the frequency of occurence.
+	for (int i = 0; i < m_matchResults.size(); ++i)
+	{
+		std::cout << "\n\t " << m_matchResults[i].result_1 << "\t : \t " << m_matchResults[i].result_2 << "\t\t    " << ((double)m_matchResults[i].tally / m_matchesPlayed) * 100 << "%\n";
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // GETTERS & SETTERS.
-int Game::getGamesToPlay()
-{
-	return m_gamesToPlay;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
-void Game::setGamesToPlay(int l_gamesToPlay)
-{
-	m_gamesToPlay = l_gamesToPlay;
-}
-
-/////////////////////////////////////////////////////////////////////////
-
 int Game::getGamesPlayed()
 {
 	return m_gamesPlayed;
 }
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::setGamesPlayed(int l_gamesPlayed)
 {
 	m_gamesPlayed = l_gamesPlayed;
 }
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int Game::getMatchesPlayed()
+{
+	return m_matchesPlayed;
+}
 
 int Game::getNumOfPlayers()
 {
 	return m_numOfPlayers;
 }
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::setWhoIsPlayingFirst(std::string& l_playingFirst)
 {
@@ -584,14 +573,14 @@ void Game::setWhoIsPlayingFirst(std::string& l_playingFirst)
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool Game::getIsRunning()
 {
 	return m_isRunning;
 }
 
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::setIsRunning(bool l_isRunning)
 {

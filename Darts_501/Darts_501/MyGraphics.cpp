@@ -1,10 +1,12 @@
 /*
- * Graphcis.cpp
+ *	A small class to handle some of the more purely graphics related stuff in the game, buffers etc.
  *
- * A small class to handle some of the more purely graphics related stuff in the game, buffers etc.
+ *	Created on: 28 Oct 2019
  *
- * Created on: 28 Oct 2019
- *	   Author: © D. Green.
+ *	Original @author:	© Abertay University. 2019.
+ *
+ *	Update by @author:	© D. Green. 2020.
+ *
  */
 
  // INCLUDES
@@ -13,15 +15,15 @@
 #include <ctype.h>  
 #include <conio.h> 
 #include <windows.h> 
-
 #include <string> 
 #include <iostream>
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // GLOBALS
 CONSOLE_SCREEN_BUFFER_INFO con_info;												// Holds screen info.
 
- // Constructor
+// CONSTRUCTORS / DESTRUCTOR
 MyGraphics::MyGraphics()
 {
 	hconsole = CreateFile(TEXT("CONOUT$"), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0L, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0L);		// Open i/o channel to console screen.
@@ -31,30 +33,17 @@ MyGraphics::MyGraphics()
 
 MyGraphics::~MyGraphics()
 {
-	// Destructor.
+	std::cout << "MyGraphics object destroyed!\n";
 }
 
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// FUNCTION DEFS
-
-//void Graphics::resizeConsoleWindow()
-//{
-//	/*
-//	 * This IS NOT my code and has been provided by herohuyongtao at:
-//	 * https://stackoverflow.com/questions/21238806/how-to-set-output-console-width-in-visual-studio
-//	 */
-//	HWND console = GetConsoleWindow();
-//	RECT r;
-//	GetWindowRect(console, &r); //stores the console's current dimensions
-//
-//	MoveWindow(console, r.left, r.top, 1600, 800, TRUE); // 1600 width, 800 height
-//}
+// FUNCTIONS
 
 // This function initializes the console graphics engine 
 void MyGraphics::initGraphics()
 {
-	COORD console_buffer_size = { 80, 25 };												/*
+	COORD console_buffer_size = { 80, 25 };													/*
 																							 * Size of console buffer. This will NOT set the buffer to the specified size if EITHER of the dimensions are smaller than
 																							 * The corresponding dimensions of the buffers window. This can be difficult to judge as the window is set in px and
 																							 * The buffer size is set in character size and rows.
@@ -72,26 +61,31 @@ void MyGraphics::initGraphics()
 																							 * greater than the window size and will not cause the setting of it to fail.
 																							 */
 
-																							 // A quick test to ensure that the buffer is set correctly.
-	if (test)
+	/*
+	 * A quick test to ensure that the buffer is set correctly.
+	 * The buffer is purposefully NOT set due to design changes.
+	 */
+	/*if (test)
 	{
 		std::cout << "Buffer set\n";
 	}
 	else
 	{
 		std::cerr << "Buffer not set\n";
-	}
+	}*/
 
 	GetConsoleScreenBufferInfo(hconsole, &con_info);										// Get details for console screen.
 }
 
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes
 void MyGraphics::publicShowConsoleCursor(bool showFlag)
 {
 	showConsoleCursor(showFlag);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
  *Small function to be able to show and hide the output windows blinking cursor.
@@ -110,7 +104,7 @@ void MyGraphics::showConsoleCursor(bool showFlag)
 	SetConsoleCursorInfo(out, &cursorInfo);
 }
 
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes.
 void MyGraphics::publicSetColor(int foreColor, int backColor)
@@ -118,19 +112,23 @@ void MyGraphics::publicSetColor(int foreColor, int backColor)
 	setColor(foreColor, backColor);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // This function sets the color of the console output.
 void MyGraphics::setColor(int fcolor, int bcolor)
 {
 	SetConsoleTextAttribute(hconsole, (WORD)((bcolor << 4) | fcolor));				// Set color.
 }
 
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes.
 void MyGraphics::publicDrawString(int& x, int y, std::string str)
 {
 	drawString(x, y, str);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This function draws a given string at the passed in coords.
 void MyGraphics::drawString(int& x, int y, std::string str)
@@ -146,13 +144,15 @@ void MyGraphics::drawString(int& x, int y, std::string str)
 	std::cout << str;
 }
 
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes.
 bool MyGraphics::publicClearTitleScreen()
 {
 	return clearTitleScreen();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This function clears the title screen.
 bool MyGraphics::clearTitleScreen()
@@ -201,13 +201,15 @@ bool MyGraphics::clearTitleScreen()
 }
 // End clearTitleScreen.
 
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes.
 void MyGraphics::publicClearGameOverScreen()
 {
 	clearGameOverScreen();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MyGraphics::clearGameOverScreen()
 {
@@ -245,13 +247,15 @@ void MyGraphics::clearGameOverScreen()
 }
 // End clearGameOverScreen.
 
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes.
 void MyGraphics::publicClearScreenFull()
 {
 	clearScreenFull();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This function clears the screen.
 void MyGraphics::clearScreenFull()
@@ -269,7 +273,7 @@ void MyGraphics::clearScreenFull()
 }
 // End clearScreen.
 
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MyGraphics::clearCheckOutTable()
 {
@@ -283,11 +287,15 @@ void MyGraphics::clearCheckOutTable()
 	std::cout << '\n';
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes.
 void MyGraphics::publicClearScreenHalf()
 {
 	clearScreenHalf();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MyGraphics::clearScreenHalf()
 {

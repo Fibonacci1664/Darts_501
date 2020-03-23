@@ -21,8 +21,9 @@
 
  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// GLOBALS
 constexpr int SINGLES_ARR_SIZE = 20;
-constexpr int FINISHES_ARR_SIZE = 162;		// Declared here due to having to be known at compile time.
+constexpr int FINISHES_ARR_SIZE = 162;
 
 struct DartBoard
 {

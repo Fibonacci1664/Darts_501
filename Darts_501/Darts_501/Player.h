@@ -25,11 +25,13 @@
 
  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr int N_DART_FINISHES_SIZE = 15;				// Declared here due to having to be known at compile time.
+// GLOBALS
+constexpr int N_DART_FINISHES_SIZE = 15;
 
 class Player
 {
 public:
+	// CONSTRUCTORS & DESTRUCTOR.
 	Player(std::string l_name, int l_innerBullSuccessRate, int l_outerBullSuccessRate, int l_singleSuccessRate, int l_doubleSuccessRate, int l_trebleSuccessRate);
 	~Player();
 
@@ -44,6 +46,7 @@ public:
 	int searchDartBoardArr(int l_number, int randNum);
 	void incrementGamesWon();
 	void incrementLegsWon();
+	void incrementSetsWon();
 	void incrementMatchesWon();
 	void increment_N_DartFinishes();
 	void printWinFreqs(int l_numOfGamesPlayed);
@@ -78,6 +81,9 @@ public:
 	int getLegsWon();
 	void setLegsWon(int l_legsWon);
 
+	int getSetsWon();
+	void setSetsWon(int l_setsWon);
+
 private:
 	// DATA MEMBERS
 	std::string m_name;
@@ -95,6 +101,7 @@ private:
 	int m_turnsTaken;
 	int m_gamesWon;
 	int m_legsWon;
+	int m_setsWon;
 	int m_matchesWon;
 
 	DartBoard m_dartBoard;
@@ -103,4 +110,3 @@ private:
 	bool m_isPlaying;
 	bool m_hasWon;
 };
-

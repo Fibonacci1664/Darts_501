@@ -40,6 +40,7 @@ Player::Player(std::string l_name, int l_innerBullSuccessRate, int l_outerBullSu
 	m_turnsTaken = 0;
 	m_gamesWon = 0;
 	m_legsWon = 0;
+	m_setsWon = 0;
 	m_matchesWon = 0;
 
 	m_isPlaying = false;
@@ -339,7 +340,7 @@ void Player::printWinFreqs(int l_numOfGamesPlayed)
 
 	std::cout << "\n##########  HERE ARE TOTAL THE RESULTS FOR " << m_name << "  ##########\n";
 
-	std::cout << "\n" << m_name << " won " << m_gamesWon << " out of a total of " << l_numOfGamesPlayed << " which is " << totalGamesWinPercent << "%\n";
+	std::cout << "\n" << m_name << " won " << m_gamesWon << " games out of a total of " << l_numOfGamesPlayed << " games, which is " << totalGamesWinPercent << "%\n";
 
 	std::cout << "\n##########  AND HERE ARE THE FREQUENCIES OF N DART FINISHES FOR " << m_name << "  ##########\n";
 
@@ -513,6 +514,21 @@ void Player::setLegsWon(int l_legsWon)
 void Player::incrementMatchesWon()
 {
 	++m_matchesWon;
+}
+
+void Player::incrementSetsWon()
+{
+	++m_setsWon;
+}
+
+int Player::getSetsWon()
+{
+	return m_setsWon;
+}
+
+void Player::setSetsWon(int l_setsWon)
+{
+	m_setsWon = l_setsWon;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
