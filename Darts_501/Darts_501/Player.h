@@ -84,6 +84,12 @@ public:
 	int getSetsWon();
 	void setSetsWon(int l_setsWon);
 
+	int getInnerBullSuccessRate();
+	int getOuterBullSuccessRate();
+	int getSingleSuccessRate();
+	int getDoubleSuccessRate();
+	int getTrebleSuccessRate();
+
 private:
 	// DATA MEMBERS
 	std::string m_name;

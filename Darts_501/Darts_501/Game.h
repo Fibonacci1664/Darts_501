@@ -66,6 +66,7 @@ private:
 	int m_gamesPlayed;
 	int m_numOfPlayers;
 	int m_gameChoice;
+	bool m_interactive;
 
 	bool m_isRunning;
 
@@ -75,4 +76,6 @@ private:
 	void determineWinner();
 	void takeTurn(Player& l_player);
 	void swapTurns();
+	int askPlayerForNum();
+	char askPlayerForType();
 };

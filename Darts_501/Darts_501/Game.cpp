@@ -27,6 +27,7 @@ Game::Game(int l_numOfPlayers, int l_matchesToPlay, MyGraphics l_graphics) :
 	m_isRunning = true;
 	m_gameChoice = 0;
 	m_matchesPlayed = 0;
+	m_interactive = false;
 
 	// Carrry out basic validation to ensure maximum of 2 players only.
 	if (m_numOfPlayers > 2)
@@ -96,7 +97,8 @@ void Game::chooseGame(int l_gameChoice)
 	}
 	else
 	{
-		std::cout << "Interactive game not built yet.\n";
+		m_interactive = true;
+		initPlayers();
 	}
 
 	m_graphics.publicClearScreenFull();
@@ -159,6 +161,24 @@ void Game::initPlayers()
 
 	for (int i = 0; i < getNumOfPlayers(); ++i)
 	{
+		// Create a computer player, then 'continue' to skip to the next iteration of the loop, allowing the user to enter their details.
+		if (m_interactive)
+		{
+			Player player_1("Computer", 71, 73, 80, 78, 80);
+
+			// Print the opponents stats.
+			std::cout << "Opponent name : " << player_1.getName() << '\n';
+			std::cout << player_1.getName() << "s success rate for hitting inner bull (50) : " << player_1.getInnerBullSuccessRate() << "%\n";
+			std::cout << player_1.getName() << "s success rate for hitting outer bull (25) : " << player_1.getOuterBullSuccessRate() << "%\n";
+			std::cout << player_1.getName() << "s success rate for hitting singles : " << player_1.getSingleSuccessRate() << "%\n";
+			std::cout << player_1.getName() << "s success rate for hitting double : " << player_1.getDoubleSuccessRate() << "%\n";
+			std::cout << player_1.getName() << "s success rate for hitting trebles : " << player_1.getTrebleSuccessRate() << "%\n";
+
+			m_players.push_back(Player(player_1));
+			m_interactive = false;
+			continue;
+		}
+
 		// Formatting.
 		if (i > 0)
 		{
@@ -224,6 +244,9 @@ void Game::initPlayers()
 		// Create a vector that holds Player objects with their names and success rates.
 		m_players.push_back(Player(name, innerBullSuccessRate, outerBullSuccessRate, singleSuccessRate, doubleSuccessRate, trebleSuccessRate));
 	}
+
+	// Set this back to true for use later on.
+	m_interactive = true;
 }
 // End initPlayers().
 
@@ -336,27 +359,92 @@ void Game::takeTurn(Player& l_player)
 			// If our score is greater than 170, i.e. no potential finish, then simply throw for treble 20's
 			if (scoreRemaining > 170)
 			{
-				numberHit = l_player.throwDart(20, 't');		// Throw for a treble 't' 20.
-				std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
-				l_player.setRemainingScore(l_player.getRemainingScore() - numberHit);
+				// If were playing an interactive game AND the current players name IS NOT 'Computer', then we know its the users turn, of course we dont want to be asking the computer what num they want to throw for.
+				if (m_interactive && (l_player.getName() != "Computer"))
+				{
+					int num;
+					char type;
+
+					do
+					{
+						num = askPlayerForNum();
+						type = askPlayerForType();
+
+						if (num == 50)
+						{
+							type = 'i';
+						}
+						else if (num == 25)
+						{
+							type = 'o';
+						}
+
+					/*
+					 * If your being daft and trying to hit an inner 17, which of course doesnt exist OR an outer 12, OR a double 50,
+					 * then youll keep being asked for sensible input.
+					 */
+					} while ((num <= 20 && (type == 'i' || type == 'o')) || (num > 20 && (type == 's' || type == 'd' || type == 't')));
+					
+					numberHit = l_player.throwDart(num, type);
+					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
+					l_player.setRemainingScore(l_player.getRemainingScore() - numberHit);
+				}
+				else
+				{
+					numberHit = l_player.throwDart(20, 't');		// Throw for a treble 't' 20.
+					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
+					l_player.setRemainingScore(l_player.getRemainingScore() - numberHit);
+				}	
 			}
 			else              // Score must be <= 170
 			{
-				bool canFinish = l_player.searchFinishesArray();
-
-				/*
-				 * If we cant finish and yet our score is < 170, then our score remaining must be either,
-				 * 169, 168, 166, 165, 163, 162 or 159, NO POSSIBLE FINISHES!, therefore just throw for treble 20.
-				 */
-				if (!canFinish)
+				if (m_interactive && (l_player.getName() != "Computer"))
 				{
-					numberHit = l_player.throwDart(20, 't');
+					int num;
+					char type;
+
+					do
+					{
+						num = askPlayerForNum();
+						type = askPlayerForType();
+
+						if (num == 50)
+						{
+							type = 'i';
+						}
+						else if (num == 25)
+						{
+							type = 'o';
+						}
+
+						/*
+						 * If your being daft and trying to hit an inner 17, which of course doesnt exist OR an outer 12, OR a double 50,
+						 * then youll keep being asked for sensible input.
+						 */
+					} while ((num <= 20 && (type == 'i' || type == 'o')) || (num > 20 && (type == 's' || type == 'd' || type == 't')));
+
+					numberHit = l_player.throwDart(num, type);
 					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
 				}
 				else
 				{
-					numberHit = l_player.throwForFinish();
-					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
+
+					bool canFinish = l_player.searchFinishesArray();
+
+					/*
+					 * If we cant finish and yet our score is < 170, then our score remaining must be either,
+					 * 169, 168, 166, 165, 163, 162 or 159, NO POSSIBLE FINISHES!, therefore just throw for treble 20.
+					 */
+					if (!canFinish)
+					{
+						numberHit = l_player.throwDart(20, 't');
+						std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
+					}
+					else
+					{
+						numberHit = l_player.throwForFinish();
+						std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
+					}
 				}
 
 				/*
@@ -466,6 +554,43 @@ void Game::takeTurn(Player& l_player)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+int Game::askPlayerForNum()
+{
+	int numChoice = 0;
+	int innerBull = 25;
+	int outerBull = 50;
+
+	do
+	{
+		std::cout << "\nWhat number would you like to throw for, 1 - 20, 25 or 50:> ";
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+		std::cin >> numChoice;
+
+	} while (!std::cin.good() || numChoice < 1 || (numChoice > 20 && (numChoice != innerBull && numChoice != outerBull)));
+
+	return numChoice;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+char Game::askPlayerForType()
+{
+	char typeChoice;
+
+	do
+	{
+		std::cout << "\nWhat type, sin, doub, treb, in bull, out bull will you throw for, please enter 's', 'd', 't', 'i', 'o':> ";
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+		std::cin >> typeChoice;
+	} while (!std::cin.good());
+
+	return typeChoice;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::determineWinner()
 {
 	// Who has won.
@@ -511,14 +636,14 @@ void Game::printMatchResults()
 	  * this is due to how they are populated in the Match vector in the takeTurn function.
 	  */
 
-	std::cout << "\nComplete matches played : " << m_matchesPlayed << " over : " << getGamesPlayed() << " games.\n";
+	std::cout << "\nComplete matches played : " << m_matchesPlayed << " over : " << getGamesPlayed() << " indivdual 501 games or legs.\n";
 
-	std::cout << "\n\t" << m_players[0].getName() << "\t : \t" << m_players[1].getName() << "\t\t Frequency\n";
+	std::cout << "\n\t" << m_players[0].getName() << "\t : \t" << m_players[1].getName() << "\t\t Occurence/Tally" << "\t\t Percentage frequency\n";
 
 	// Loop over all match results calculating and printing each result and the frequency of occurence.
 	for (int i = 0; i < m_matchResults.size(); ++i)
 	{
-		std::cout << "\n\t " << m_matchResults[i].result_1 << "\t : \t " << m_matchResults[i].result_2 << "\t\t    " << ((double)m_matchResults[i].tally / m_matchesPlayed) * 100 << "%\n";
+		std::cout << "\n\t " << m_matchResults[i].result_1 << "\t : \t " << m_matchResults[i].result_2 << "\t\t\t" << m_matchResults[i].tally << "\t\t\t\t  " << ((double)m_matchResults[i].tally / m_matchesPlayed) * 100 << "%\n";
 	}
 }
 
