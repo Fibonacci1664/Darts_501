@@ -265,52 +265,56 @@ void Player::incrementGamesWon()
 
 void Player::increment_N_DartFinishes()
 {
+	// A 6, 7, or 8 dart finish will only be possible in games of 301, NOT 501.
 	switch (m_totalDartsThrownInGame)
 	{
-	case 7:
+	case 6:
 		++m_nDartFinishes[0];
 		break;
-	case 8:
+	case 7:
 		++m_nDartFinishes[1];
 		break;
-	case 9:
+	case 8:
 		++m_nDartFinishes[2];
 		break;
-	case 10:
+	case 9:
 		++m_nDartFinishes[3];
 		break;
-	case 11:
+	case 10:
 		++m_nDartFinishes[4];
 		break;
-	case 12:
+	case 11:
 		++m_nDartFinishes[5];
 		break;
-	case 13:
+	case 12:
 		++m_nDartFinishes[6];
 		break;
-	case 14:
+	case 13:
 		++m_nDartFinishes[7];
 		break;
-	case 15:
+	case 14:
 		++m_nDartFinishes[8];
 		break;
-	case 16:
+	case 15:
 		++m_nDartFinishes[9];
 		break;
-	case 17:
+	case 16:
 		++m_nDartFinishes[10];
 		break;
-	case 18:
+	case 17:
 		++m_nDartFinishes[11];
 		break;
-	case 19:
+	case 18:
 		++m_nDartFinishes[12];
 		break;
-	case 20:
+	case 19:
 		++m_nDartFinishes[13];
 		break;
-	case 21:
+	case 20:
 		++m_nDartFinishes[14];
+		break;
+	case 21:
+		++m_nDartFinishes[15];
 		break;
 	default:
 		std::cout << "Oops, something went wrong trying to populate the nDartFinishes array!.\n";
@@ -323,21 +327,22 @@ void Player::printWinFreqs(int l_numOfGamesPlayed)
 {
 	double totalGamesWinPercent = ((double)m_gamesWon / l_numOfGamesPlayed) * 100;
 
-	double sevenDartFinPercentage = ((double)m_nDartFinishes[0] / m_gamesWon) * 100;
-	double eightDartFinPercentage = ((double)m_nDartFinishes[1] / m_gamesWon) * 100;
-	double nineDartFinPercentage = ((double)m_nDartFinishes[2] / m_gamesWon) * 100;
-	double tenDartFinPercentage = ((double)m_nDartFinishes[3] / m_gamesWon) * 100;
-	double elevenDartFinPercentage = ((double)m_nDartFinishes[4] / m_gamesWon) * 100;
-	double twelveDartFinPercentage = ((double)m_nDartFinishes[5] / m_gamesWon) * 100;
-	double thirteenDartFinPercentage = ((double)m_nDartFinishes[6] / m_gamesWon) * 100;
-	double fourteenDartFinPercentage = ((double)m_nDartFinishes[7] / m_gamesWon) * 100;
-	double fifteenDartFinPercentage = ((double)m_nDartFinishes[8] / m_gamesWon) * 100;
-	double sixteenDartFinPercentage = ((double)m_nDartFinishes[9] / m_gamesWon) * 100;
-	double seventeenDartFinPercentage = ((double)m_nDartFinishes[10] / m_gamesWon) * 100;
-	double eighteenDartFinPercentage = ((double)m_nDartFinishes[11] / m_gamesWon) * 100;
-	double nineteenDartFinPercentage = ((double)m_nDartFinishes[12] / m_gamesWon) * 100;
-	double twentyDartFinPercentage = ((double)m_nDartFinishes[13] / m_gamesWon) * 100;
-	double twentyoneDartFinPercentage = ((double)m_nDartFinishes[14] / m_gamesWon) * 100;
+	double sixDartFinPercentage = ((double)m_nDartFinishes[0] / m_gamesWon) * 100;
+	double sevenDartFinPercentage = ((double)m_nDartFinishes[1] / m_gamesWon) * 100;
+	double eightDartFinPercentage = ((double)m_nDartFinishes[2] / m_gamesWon) * 100;
+	double nineDartFinPercentage = ((double)m_nDartFinishes[3] / m_gamesWon) * 100;
+	double tenDartFinPercentage = ((double)m_nDartFinishes[4] / m_gamesWon) * 100;
+	double elevenDartFinPercentage = ((double)m_nDartFinishes[5] / m_gamesWon) * 100;
+	double twelveDartFinPercentage = ((double)m_nDartFinishes[6] / m_gamesWon) * 100;
+	double thirteenDartFinPercentage = ((double)m_nDartFinishes[7] / m_gamesWon) * 100;
+	double fourteenDartFinPercentage = ((double)m_nDartFinishes[8] / m_gamesWon) * 100;
+	double fifteenDartFinPercentage = ((double)m_nDartFinishes[9] / m_gamesWon) * 100;
+	double sixteenDartFinPercentage = ((double)m_nDartFinishes[10] / m_gamesWon) * 100;
+	double seventeenDartFinPercentage = ((double)m_nDartFinishes[11] / m_gamesWon) * 100;
+	double eighteenDartFinPercentage = ((double)m_nDartFinishes[12] / m_gamesWon) * 100;
+	double nineteenDartFinPercentage = ((double)m_nDartFinishes[13] / m_gamesWon) * 100;
+	double twentyDartFinPercentage = ((double)m_nDartFinishes[14] / m_gamesWon) * 100;
+	double twentyoneDartFinPercentage = ((double)m_nDartFinishes[15] / m_gamesWon) * 100;
 
 	std::cout << "\n##########  HERE ARE TOTAL THE RESULTS FOR " << m_name << "  ##########\n";
 
@@ -346,6 +351,7 @@ void Player::printWinFreqs(int l_numOfGamesPlayed)
 	std::cout << "\n##########  AND HERE ARE THE FREQUENCIES OF N DART FINISHES FOR " << m_name << "  ##########\n";
 
 	std::cout << "\n	(N) DART FINISHES			FREQUENCIES\n";
+	std::cout << "\n		6				 : " << sixDartFinPercentage << "%\n";
 	std::cout << "\n		7				 : " << sevenDartFinPercentage << "%\n";
 	std::cout << "\n		8				 : " << eightDartFinPercentage << "%\n";
 	std::cout << "\n		9				 : " << nineDartFinPercentage << "%\n";

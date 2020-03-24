@@ -43,7 +43,7 @@ MyGraphics::~MyGraphics()
 // This function initializes the console graphics engine 
 void MyGraphics::initGraphics()
 {
-	COORD console_buffer_size = { 120, 30 };													/*
+	COORD console_buffer_size = { 120, 25};													/*
 																							 * Size of console buffer. This will NOT set the buffer to the specified size if EITHER of the dimensions are smaller than
 																							 * The corresponding dimensions of the buffers window. This can be difficult to judge as the window is set in px and
 																							 * The buffer size is set in character size and rows.
@@ -63,6 +63,7 @@ void MyGraphics::initGraphics()
 
 	/*
 	 * A quick test to ensure that the buffer is set correctly.
+	 * I decided NOT to have a buffer in the end and so it is purposefully smaller than the console window size so that SetConsoleScreenBufferSize returns false;
 	 */
 	/*if (test)
 	{

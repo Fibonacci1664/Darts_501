@@ -66,8 +66,10 @@ private:
 	int m_gamesPlayed;
 	int m_numOfPlayers;
 	int m_gameChoice;
-	bool m_interactive;
+	int interactiveNumChoice;
+	char interactiveTypeChoice;
 
+	bool m_interactive;
 	bool m_isRunning;
 
 	// MEMBER FUNCTIONS.
@@ -78,4 +80,11 @@ private:
 	void swapTurns();
 	int askPlayerForNum();
 	char askPlayerForType();
+	void throwForTrebleTwenties(Player& l_player, int& l_numberHit);
+	void throwForFinish(Player& l_player, int& l_numberHit);
+	void calculateRemainingScore(Player& l_player, int& l_numberHit, int& l_scoreRemaining);
+	void checkForWin(Player& l_player);
+	void checkLegsWon(Player& l_player);
+	void checkSetsWon(Player& l_player);
+
 };

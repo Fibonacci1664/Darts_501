@@ -7,14 +7,16 @@
  *		-	Player 2 match results (result_2)
  *		-	A tally of how many times that result has happened, we keep a tally otherwise we would have to print out ALL
  *			results including the match results that have already had an occurence and would also result in a huge vector
- *			of every single match, by keeping a tally there are only 12 possible combinations of match results, namely
+ *			of every single match, by keeping a tally there are only 14 possible combinations of match results, namely
  *
+ *			7 : 0
  *			7 : 1
  *			7 : 2
  *			7 : 3
  *			7 : 4
  *			7 : 5
  *			7 : 6
+ *			0 : 7
  *			1 : 7
  *			2 : 7
  *			3 : 7

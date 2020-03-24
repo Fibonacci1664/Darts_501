@@ -38,6 +38,7 @@ int main()
 {
 	static bool seeded = false;
 
+	// Ensure the seed only happens once.
 	if (!seeded)
 	{
 		srand(std::time(nullptr));
@@ -57,13 +58,12 @@ int main()
 
 	bool gameCreated = false;	
 
-	// Game Loop.
 	while (window.isOpen())
 	{
 		// Handle window events, closing or resizing.
 		windowProcess(&window);
 
-		// Call standard game loop functions (input, update and render).
+		// Draw the checkout table texture in the window.
 		level.render();
 
 		/*
@@ -74,7 +74,7 @@ int main()
 		{
 			// Fixed at two players only. If more players are passed, this is checked and causes an error and the program to exit.
 			int numOfPlayers = 2;
-			int matchesToPlay = 1;
+			int matchesToPlay = 20;
 
 			/*
 			 * Create a game with 2 players to play 1000 games(not rounds), each game consists of xyz amount of rounds,

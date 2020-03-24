@@ -52,6 +52,8 @@ Game::~Game()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // FUNCTIONS.
+
+// This prints out the initial options for the player, allowing them to choose what kind of game they wish to play.
 void Game::printGameOptions()
 {
 	do
@@ -69,6 +71,7 @@ void Game::printGameOptions()
 			<< "\t\t-	Interactive game of 501.\n"
 			<< "\t\t-	Two players; User and Computer; User enters their own success rates.\n"
 			<< "\t\t-	Computer has pre-programmed success rates.\n"
+			<< "\t\t-	One Match (7 Lgs in a Set, 7 Sets in a Match).\n"
 			<< "\n:> ";
 
 		std::cin >> m_gameChoice;
@@ -83,8 +86,6 @@ void Game::printGameOptions()
 
 void Game::chooseGame(int l_gameChoice)
 {
-	std::cout << "this works\n";
-
 	if (l_gameChoice == 1)
 	{
 		// Use this for auto creation of players. (MAX TWO PLAYERS)
@@ -94,10 +95,12 @@ void Game::chooseGame(int l_gameChoice)
 	{
 		// Use this for manually entering players names and success rates.
 		initPlayers();
+		m_interactive = false;
 	}
 	else
 	{
 		m_interactive = true;
+		m_matchesToPlay = 1;
 		initPlayers();
 	}
 
@@ -167,12 +170,12 @@ void Game::initPlayers()
 			Player player_1("Computer", 71, 73, 80, 78, 80);
 
 			// Print the opponents stats.
-			std::cout << "Opponent name : " << player_1.getName() << '\n';
-			std::cout << player_1.getName() << "s success rate for hitting inner bull (50) : " << player_1.getInnerBullSuccessRate() << "%\n";
-			std::cout << player_1.getName() << "s success rate for hitting outer bull (25) : " << player_1.getOuterBullSuccessRate() << "%\n";
-			std::cout << player_1.getName() << "s success rate for hitting singles : " << player_1.getSingleSuccessRate() << "%\n";
-			std::cout << player_1.getName() << "s success rate for hitting double : " << player_1.getDoubleSuccessRate() << "%\n";
-			std::cout << player_1.getName() << "s success rate for hitting trebles : " << player_1.getTrebleSuccessRate() << "%\n";
+			std::cout << "\nOpponent name : " << player_1.getName() << '\n';
+			std::cout << "\n" << player_1.getName() << "s success rate for hitting inner bull (50) : " << player_1.getInnerBullSuccessRate() << "%\n";
+			std::cout << "\n" <<player_1.getName() << "s success rate for hitting outer bull (25) : " << player_1.getOuterBullSuccessRate() << "%\n";
+			std::cout << "\n" <<player_1.getName() << "s success rate for hitting singles : " << player_1.getSingleSuccessRate() << "%\n";
+			std::cout << "\n" <<player_1.getName() << "s success rate for hitting double : " << player_1.getDoubleSuccessRate() << "%\n";
+			std::cout << "\n" <<player_1.getName() << "s success rate for hitting trebles : " << player_1.getTrebleSuccessRate() << "%\n";
 
 			m_players.push_back(Player(player_1));
 			m_interactive = false;
@@ -349,208 +352,38 @@ void Game::takeTurn(Player& l_player)
 			m_players[1].setIsPlaying(!m_players[1].getIsPlaying());
 		}
 
+		std::cout << l_player.getName() << " score : " << l_player.getRemainingScore() << '\n';
+
 		// Keep looping until we've thrown the amount of darts we're supposed to throw in each round i.e. 3.
 		while (l_player.getDartsThrownInRnd() < l_player.getNumOfDartsToThrow())
 		{
-			std::cout << l_player.getName() << " score : " << l_player.getRemainingScore() << '\n';
 			int numberHit = 0;
 			int scoreRemaining = l_player.getRemainingScore();
 
 			// If our score is greater than 170, i.e. no potential finish, then simply throw for treble 20's
 			if (scoreRemaining > 170)
 			{
-				// If were playing an interactive game AND the current players name IS NOT 'Computer', then we know its the users turn, of course we dont want to be asking the computer what num they want to throw for.
-				if (m_interactive && (l_player.getName() != "Computer"))
-				{
-					int num;
-					char type;
-
-					do
-					{
-						num = askPlayerForNum();
-						type = askPlayerForType();
-
-						if (num == 50)
-						{
-							type = 'i';
-						}
-						else if (num == 25)
-						{
-							type = 'o';
-						}
-
-					/*
-					 * If your being daft and trying to hit an inner 17, which of course doesnt exist OR an outer 12, OR a double 50,
-					 * then youll keep being asked for sensible input.
-					 */
-					} while ((num <= 20 && (type == 'i' || type == 'o')) || (num > 20 && (type == 's' || type == 'd' || type == 't')));
-					
-					numberHit = l_player.throwDart(num, type);
-					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
-					l_player.setRemainingScore(l_player.getRemainingScore() - numberHit);
-				}
-				else
-				{
-					numberHit = l_player.throwDart(20, 't');		// Throw for a treble 't' 20.
-					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
-					l_player.setRemainingScore(l_player.getRemainingScore() - numberHit);
-				}	
+				throwForTrebleTwenties(l_player, numberHit);
 			}
 			else              // Score must be <= 170
 			{
-				if (m_interactive && (l_player.getName() != "Computer"))
+				throwForFinish(l_player, numberHit);
+
+				calculateRemainingScore(l_player, numberHit, scoreRemaining);
+
+				if (l_player.getHasWon())
 				{
-					int num;
-					char type;
-
-					do
-					{
-						num = askPlayerForNum();
-						type = askPlayerForType();
-
-						if (num == 50)
-						{
-							type = 'i';
-						}
-						else if (num == 25)
-						{
-							type = 'o';
-						}
-
-						/*
-						 * If your being daft and trying to hit an inner 17, which of course doesnt exist OR an outer 12, OR a double 50,
-						 * then youll keep being asked for sensible input.
-						 */
-					} while ((num <= 20 && (type == 'i' || type == 'o')) || (num > 20 && (type == 's' || type == 'd' || type == 't')));
-
-					numberHit = l_player.throwDart(num, type);
-					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
-				}
-				else
-				{
-
-					bool canFinish = l_player.searchFinishesArray();
-
-					/*
-					 * If we cant finish and yet our score is < 170, then our score remaining must be either,
-					 * 169, 168, 166, 165, 163, 162 or 159, NO POSSIBLE FINISHES!, therefore just throw for treble 20.
-					 */
-					if (!canFinish)
-					{
-						numberHit = l_player.throwDart(20, 't');
-						std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
-					}
-					else
-					{
-						numberHit = l_player.throwForFinish();
-						std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << numberHit << '\n';
-					}
-				}
-
-				/*
-				 * This check is due to the fact that you need a score of 2 at the very min to be able to finish on double 1.
-				 */
-				if (((scoreRemaining - numberHit) < 2) && (scoreRemaining - numberHit) != 0)
-				{
-					l_player.setRemainingScore(l_player.getRemainingScore());	// Player must have bust, so score remains at whatever it was.
-					std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " BUST!  ##########\n";
-				}
-				else
-				{
-					l_player.setRemainingScore(l_player.getRemainingScore() - numberHit);				// Reduce score by number hit amount.
-
-					// Check if weve won (checked out).
-					if (l_player.getRemainingScore() == 0)		// We must have finshed.
-					{
-						if (m_numOfPlayers > 1)
-						{
-							m_players[1].setIsPlaying(false);				/*
-																			 * If player 1 has won the game we need to stop player 2 from entering the if statment
-																			 * at the start of this entire function thereby stopping them taking their next turn as this
-																			 * particular game is over. Without this we can have a situation were player 1 can win
-																			 * AND then player 2 on the very next turn can also win should they be able to finish.
-																			 * this leads to incorrect totalling of win frequencies and can be noticed if one pays
-																			 * close attention to the total num of games played vs the total that is being tallied in the
-																			 * nDartFinishes array while using the debugger.
-																			 */
-						}
-
-						l_player.setHasWon(true);
-						l_player.incrementGamesWon();			// Used for tracking n-darts finish frequencies.
-						l_player.incrementLegsWon();			// Used for tracking leg/sets/match winning frequencies.
-
-						// If the player has won 7 legs they have won a set, this is tallied and legs for both players are reset to 0.
-						if (l_player.getLegsWon() == 7)
-						{
-							l_player.incrementSetsWon();
-							m_players[0].setLegsWon(0);
-							m_players[1].setLegsWon(0);
-
-							// If the player has won 7 sets they have won a match.
-							if (l_player.getSetsWon() == 7)
-							{
-								Match results;
-								results.result_1 = m_players[0].getSetsWon();
-								results.result_2 = m_players[1].getSetsWon();
-								results.tally += 1;
-
-								/*
-								 * This ensures we populate the vector with the first set of results, and thereafter we are then checking against those and subsequent results
-								 * If we find a match, increase the tally for those results otherwise, push back the new results onto the end of the vector.
-								 * There are only 12 possible combinations of results. So the vector should NEVER end up larger than 12 elements.
-								 */
-								if (m_matchResults.size() == 0)
-								{
-									m_matchResults.push_back(results);
-								}
-								else
-								{
-									bool matchFound = false;
-
-									for (int i = 0; i < m_matchResults.size(); ++i)
-									{
-										// Check if we have these exact results already, if so increment the tally.
-										if (m_matchResults[i].result_1 == results.result_1 && m_matchResults[i].result_2 == results.result_2)
-										{
-											// We found a matching score so just add one to the tally for this result and get the hell out of this loop.
-											m_matchResults[i].tally += 1;
-											matchFound = true;
-											break;
-										}
-									}
-
-									// If we haven't found a match then we must have a new result out of the 12 possibilities.
-									if (!matchFound)
-									{
-										/*
-										 * If we dont break out here after adding a new element this new result will be accounted for in the for loops condition and we will continue to check
-										 * beacuse we are not at m_matchResults.size() yet due to just adding another element, this ends up resulting in a match for the above if statement which
-										 * will then tally incorrectly.
-										 */
-										m_matchResults.push_back(results);
-									}
-								}
-
-								// By this point a match has been won, increment the amount of matches played and reset the amount of sets won back to zero
-								l_player.incrementMatchesWon();
-								++m_matchesPlayed;
-								m_players[0].setSetsWon(0);
-								m_players[1].setSetsWon(0);
-							}	
-						}
-
-						l_player.increment_N_DartFinishes();
-						break;
-					}
+					break;
 				}
 			}
+
+			std::cout << l_player.getName() << " remaining score : " << l_player.getRemainingScore() << '\n';
 		}
 
 		l_player.setDartsThrownInRnd(0);		// Reset the amount of darts thrown.
 		l_player.incrementTurnsTaken();
 	}
 }
-// End takeTurn().
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -560,14 +393,17 @@ int Game::askPlayerForNum()
 	int innerBull = 25;
 	int outerBull = 50;
 
+	std::cout << "outside the do of ask player for num\n";
+
 	do
 	{
+		std::cout << "inside the do of ask player for num\n";
 		std::cout << "\nWhat number would you like to throw for, 1 - 20, 25 or 50:> ";
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
 		std::cin >> numChoice;
 
-	} while (!std::cin.good() || numChoice < 1 || (numChoice > 20 && (numChoice != innerBull && numChoice != outerBull)));
+	} while (!std::cin.good() || numChoice < 1 || (numChoice > 20 && numChoice != innerBull && numChoice != outerBull));
 
 	return numChoice;
 }
@@ -576,18 +412,212 @@ int Game::askPlayerForNum()
 
 char Game::askPlayerForType()
 {
+	// Check what the interactive num is, if its bull or 25 return appropriate char, this cuts down on checks in the do while below.
+	if (interactiveNumChoice == 50)
+	{
+		return 'i';
+	}
+	else if (interactiveNumChoice == 25)
+	{
+		return 'o';
+	}
+
 	char typeChoice;
+
+	std::cout << "outside the do of ask player for type\n";
 
 	do
 	{
-		std::cout << "\nWhat type, sin, doub, treb, in bull, out bull will you throw for, please enter 's', 'd', 't', 'i', 'o':> ";
+		std::cout << "inside the do of ask player for type\n";
+		std::cout << "\nWhat type, single, double, treble, will you throw for? please enter 's', 'd', 't':> ";
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
 		std::cin >> typeChoice;
-	} while (!std::cin.good());
+
+	} while (!std::cin.good() || (typeChoice != 's' && typeChoice != 'd' && typeChoice != 't'));
 
 	return typeChoice;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::throwForTrebleTwenties(Player& l_player, int& l_numberHit)
+{
+	// If were playing an interactive game AND the current players name IS NOT 'Computer', then we know its the users turn, of course we dont want to be asking the computer what num they want to throw for.
+	if (m_interactive && (l_player.getName() != "Computer"))
+	{
+		interactiveNumChoice = askPlayerForNum();
+		interactiveTypeChoice = askPlayerForType();
+
+		l_numberHit = l_player.throwDart(interactiveNumChoice, interactiveTypeChoice);
+		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
+		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);
+	}
+	else
+	{
+		l_numberHit = l_player.throwDart(20, 't');		// Throw for a treble 't' 20.
+		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
+		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::throwForFinish(Player& l_player, int& l_numberHit)
+{
+	if (m_interactive && (l_player.getName() != "Computer"))
+	{
+		interactiveNumChoice = askPlayerForNum();
+		interactiveTypeChoice = askPlayerForType();
+
+		l_numberHit = l_player.throwDart(interactiveNumChoice, interactiveTypeChoice);
+		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
+		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);
+	}
+	else
+	{
+
+		bool canFinish = l_player.searchFinishesArray();
+
+		/*
+		 * If we cant finish and yet our score is < 170, then our score remaining must be either,
+		 * 169, 168, 166, 165, 163, 162 or 159, NO POSSIBLE FINISHES!, therefore just throw for treble 20.
+		 */
+		if (!canFinish)
+		{
+			l_numberHit = l_player.throwDart(20, 't');
+			std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
+		}
+		else
+		{
+			l_numberHit = l_player.throwForFinish();
+			std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::calculateRemainingScore(Player& l_player, int& l_numberHit, int& l_scoreRemaining)
+{
+	/*
+	* This check is due to the fact that you need a score of 2 at the very min to be able to finish on double 1.
+	*/
+	if (((l_scoreRemaining - l_numberHit) < 2) && (l_scoreRemaining - l_numberHit) != 0)
+	{
+		l_player.setRemainingScore(l_player.getRemainingScore());	// Player must have bust, so score remains at whatever it was.
+		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " BUST!  ##########\n";
+	}
+	else
+	{
+		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);				// Reduce score by number hit amount.
+
+		checkForWin(l_player);		
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::checkForWin(Player& l_player)
+{
+	// Check if weve won (checked out).
+	if (l_player.getRemainingScore() == 0)		// We must have finshed.
+	{
+		if (m_numOfPlayers > 1)
+		{
+			m_players[1].setIsPlaying(false);				/*
+															 * If player 1 has won the game we need to stop player 2 from entering the if statment
+															 * at the start of the takeTurn function thereby stopping them taking their next turn as this
+															 * particular game is now over. Without this we can have a situation were player 1 can win
+															 * AND then player 2 on the very next turn can also win should they be able to finish.
+															 * this leads to incorrect totalling of win frequencies and can be noticed if one pays
+															 * close attention to the total num of games played vs the total that is being tallied in the
+															 * nDartFinishes array while using the debugger.
+															 */
+		}
+
+		l_player.setHasWon(true);
+		l_player.incrementGamesWon();			// Used for tracking n-darts finish frequencies.
+		l_player.incrementLegsWon();			// Used for tracking leg/sets/match winning frequencies.
+
+		checkLegsWon(l_player);
+
+		l_player.increment_N_DartFinishes();
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::checkLegsWon(Player& l_player)
+{
+	// If the player has won 7 legs they have won a set, this is tallied and legs for both players are reset to 0.
+	if (l_player.getLegsWon() == 7)
+	{
+		l_player.incrementSetsWon();
+		m_players[0].setLegsWon(0);
+		m_players[1].setLegsWon(0);
+
+		checkSetsWon(l_player);		
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::checkSetsWon(Player& l_player)
+{
+	// If the player has won 7 sets they have won a match.
+	if (l_player.getSetsWon() == 7)
+	{
+		Match results;
+		results.result_1 = m_players[0].getSetsWon();
+		results.result_2 = m_players[1].getSetsWon();
+		results.tally += 1;
+
+		/*
+		 * This ensures we populate the vector with the first set of results, and thereafter we are then checking against those and subsequent results
+		 * If we find a match, increase the tally for those results otherwise, push back the new results onto the end of the vector.
+		 * There are only 14 possible combinations of results. So the vector should NEVER end up larger than 14 elements.
+		 */
+		if (m_matchResults.size() == 0)
+		{
+			m_matchResults.push_back(results);
+		}
+		else
+		{
+			bool matchFound = false;
+
+			for (int i = 0; i < m_matchResults.size(); ++i)
+			{
+				// Check if we have these exact results already, if so increment the tally.
+				if (m_matchResults[i].result_1 == results.result_1 && m_matchResults[i].result_2 == results.result_2)
+				{
+					// We found a matching score so just add one to the tally for this result and get the hell out of this loop.
+					m_matchResults[i].tally += 1;
+					matchFound = true;
+					break;
+				}
+			}
+
+			// If we haven't found a match then we must have a new result out of the 12 possibilities.
+			if (!matchFound)
+			{
+				/*
+				 * If we dont break out here after adding a new element this new result will be accounted for in the for loops condition and we will continue to check
+				 * beacuse we are not at m_matchResults.size() yet due to just adding another element, this ends up resulting in a match for the above if statement which
+				 * will then tally incorrectly.
+				 */
+				m_matchResults.push_back(results);
+			}
+		}
+
+		// By this point a match has been won, increment the amount of matches played and reset the amount of sets won back to zero
+		l_player.incrementMatchesWon();
+		++m_matchesPlayed;
+		m_players[0].setSetsWon(0);
+		m_players[1].setSetsWon(0);
+	}
+}
+// End checkSetsWon().
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
