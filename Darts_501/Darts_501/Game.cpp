@@ -16,6 +16,7 @@
  // INLCUDES.
 #include "Game.h"
 #include <iostream>
+#include <algorithm>
 #include "MyGraphics.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +29,7 @@ Game::Game(int l_numOfPlayers, int l_matchesToPlay, MyGraphics l_graphics) :
 	m_gameChoice = 0;
 	m_matchesPlayed = 0;
 	m_interactive = false;
+	m_printOutput = true;
 
 	// Carrry out basic validation to ensure maximum of 2 players only.
 	if (m_numOfPlayers > 2)
@@ -37,6 +39,7 @@ Game::Game(int l_numOfPlayers, int l_matchesToPlay, MyGraphics l_graphics) :
 		return;
 	}
 
+	askForOutput();
 	printGameOptions();
 	showDartArt();
 	showTitle();
@@ -52,6 +55,29 @@ Game::~Game()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // FUNCTIONS.
+
+void Game::askForOutput()
+{
+	char ans;
+
+	do
+	{
+		std::cout << "Do you wish to see all output for each dart/throw, y/n:> ";		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+		std::cin >> ans;
+	} while (!std::cin.good() || (ans != 'y' && ans != 'n'));
+
+	if (ans == 'y')
+	{
+		m_printOutput = true;
+	}
+	else if (ans == 'n')
+	{
+		m_printOutput = false;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This prints out the initial options for the player, allowing them to choose what kind of game they wish to play.
 void Game::printGameOptions()
@@ -550,8 +576,8 @@ void Game::checkForWin(Player& l_player)
 
 void Game::checkLegsWon(Player& l_player)
 {
-	// If the player has won 7 legs they have won a set, this is tallied and legs for both players are reset to 0.
-	if (l_player.getLegsWon() == 7)
+	// If the player has won 3 legs they have won a set, this is tallied and legs for both players are reset to 0.
+	if (l_player.getLegsWon() == 3)
 	{
 		l_player.incrementSetsWon();
 		m_players[0].setLegsWon(0);
@@ -742,3 +768,16 @@ void Game::setIsRunning(bool l_isRunning)
 	m_isRunning = l_isRunning;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool Game::getPrintOutput()
+{
+	return m_printOutput;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::setPrintOutput(bool l_printOutput)
+{
+	m_printOutput = l_printOutput;
+}

@@ -90,6 +90,9 @@ public:
 	int getDoubleSuccessRate();
 	int getTrebleSuccessRate();
 
+	bool getPrintOutput();
+	void setPrintOutput(bool l_printOutput);
+
 private:
 	// DATA MEMBERS
 	std::string m_name;
@@ -115,4 +118,5 @@ private:
 
 	bool m_isPlaying;
 	bool m_hasWon;
+	bool m_printOutput;
 };

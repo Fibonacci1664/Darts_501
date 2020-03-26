@@ -38,6 +38,7 @@ public:
 	void printGameOptions();
 	void chooseGame(int l_gameChoice);
 	void printMatchResults();
+	void askForOutput();
 
 	// GETTERS & SETTERS
 	int getGamesPlayed();
@@ -51,6 +52,10 @@ public:
 	void setIsRunning(bool l_isRunning);
 
 	int getMatchesPlayed();
+
+	bool getPrintOutput();
+	void setPrintOutput(bool l_printOutput);
+
 
 private:
 	// DATA MEMBERS.
@@ -71,6 +76,8 @@ private:
 
 	bool m_interactive;
 	bool m_isRunning;
+	bool m_printOutput;
+
 
 	// MEMBER FUNCTIONS.
 	void autoInitPlayers();
