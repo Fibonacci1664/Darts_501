@@ -530,7 +530,6 @@ void Game::throwForFinish(Player& l_player, int& l_numberHit)
 		interactiveTypeChoice = askPlayerForType();
 
 		l_numberHit = l_player.throwDart(interactiveNumChoice, interactiveTypeChoice);
-		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);
 	}
 	else
 	{
@@ -550,6 +549,8 @@ void Game::throwForFinish(Player& l_player, int& l_numberHit)
 			l_numberHit = l_player.throwForFinish();
 		}
 	}
+
+	l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);
 
 	if (m_printOutput)
 	{
