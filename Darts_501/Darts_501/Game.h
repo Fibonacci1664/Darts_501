@@ -38,7 +38,7 @@ public:
 	void printGameOptions();
 	void chooseGame(int l_gameChoice);
 	void printMatchResults();
-	void askForOutput();
+	void askForOutput(int l_gameChoice);
 
 	// GETTERS & SETTERS
 	int getGamesPlayed();
@@ -89,7 +89,6 @@ private:
 	char askPlayerForType();
 	void throwForTrebleTwenties(Player& l_player, int& l_numberHit);
 	void throwForFinish(Player& l_player, int& l_numberHit);
-	void calculateRemainingScore(Player& l_player, int& l_numberHit, int& l_scoreRemaining);
 	void checkForWin(Player& l_player, int& l_numberHit);
 	void checkLegsWon(Player& l_player);
 	void checkSetsWon(Player& l_player);

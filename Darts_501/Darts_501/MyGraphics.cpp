@@ -33,7 +33,7 @@ MyGraphics::MyGraphics()
 
 MyGraphics::~MyGraphics()
 {
-	std::cout << "MyGraphics object destroyed!\n";
+	//std::cout << "MyGraphics object destroyed!\n";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,52 +204,6 @@ bool MyGraphics::clearTitleScreen()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes.
-void MyGraphics::publicClearGameOverScreen()
-{
-	clearGameOverScreen();
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void MyGraphics::clearGameOverScreen()
-{
-	int count = 0;
-
-	//setColor(10, 0);																// Set color to green on black.
-
-	while (count < 3)
-	{
-		for (int index = 5; index < 81; index++)									// Clear the screen with a scrolling effect.
-		{
-			switch (count)
-			{
-			case 0:
-				MyGraphics::drawString(index, 0, " ");
-				Sleep(20);
-				break;
-			case 1:
-				MyGraphics::drawString(index, 1, " ");
-				Sleep(20);
-				break;
-			case 2:
-				MyGraphics::drawString(index, 2, " ");
-				Sleep(20);
-				break;
-			default:
-				std::cout << "Oops, something went wrong!\n";
-			}
-		}
-
-		++count;
-
-		std::cout << '\n';
-	}
-}
-// End clearGameOverScreen.
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes.
 void MyGraphics::publicClearScreenFull()
 {
 	clearScreenFull();
@@ -264,47 +218,12 @@ void MyGraphics::clearScreenFull()
 
 	int xPos = 0;
 
-	for (int index = 0; index < 30; index++)										// Clear all of the screen as a block of blank text.
+	for (int index = 0; index < 100; index++)										// Clear all of the screen as a block of blank text.
 	{
-		MyGraphics::drawString(xPos, index, "                                                                                             ");
-	}
-
-	std::cout << '\n';
-}
-// End clearScreen.
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void MyGraphics::clearCheckOutTable()
-{
-	int xPos = 164;
-
-	for (int index = 0; index < 30; index++)										// Clear all of the screen as a block of blank text.
-	{
-		MyGraphics::drawString(xPos, index, "                               ");
+		MyGraphics::drawString(xPos, index, "                                                                                                            ");
 	}
 
 	std::cout << '\n';
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// This is the public interface that simply calls the subsequent and private function, thus not allowing direct access from outside classes.
-void MyGraphics::publicClearScreenHalf()
-{
-	clearScreenHalf();
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void MyGraphics::clearScreenHalf()
-{
-	int xPos = 164;
-
-	for (int index = 0; index < 30; index++)										// Clear the upper half of the screen as a block of blank text.
-	{
-		MyGraphics::drawString(xPos, index, "                               ");
-	}
-
-	std::cout << '\n';
-}

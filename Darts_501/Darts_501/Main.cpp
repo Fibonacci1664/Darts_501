@@ -1,3 +1,14 @@
+/*
+ *	This is the main point of entry for the program and handles:
+ *		-	Event polling.
+ *		-	SFML window creation.
+ *		-	Main game loop. *
+ *
+ *	Original @author D. Green.
+ *
+ *	© D. Green. 2020.
+ */
+
 // INCLUDES
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -74,7 +85,7 @@ int main()
 		{
 			// Fixed at two players only. If more players are passed, this is checked and causes an error and the program to exit.
 			int numOfPlayers = 2;
-			int matchesToPlay = 100;
+			int matchesToPlay = 10000;
 
 			/*
 			 * Create a game with 2 players to play 1000 games(not rounds), each game consists of xyz amount of rounds,

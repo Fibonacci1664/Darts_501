@@ -45,11 +45,12 @@ Player::Player(std::string l_name, int l_innerBullSuccessRate, int l_outerBullSu
 
 	m_isPlaying = false;
 	m_hasWon = false;
+	m_printOutput = false;
 }
 
 Player::~Player()
 {
-	std::cout << "Player object destroyed!\n";
+	//std::cout << "Player object destroyed!\n";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

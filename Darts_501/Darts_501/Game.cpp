@@ -40,7 +40,6 @@ Game::Game(int l_numOfPlayers, int l_matchesToPlay, MyGraphics l_graphics) :
 	}
 
 	printGameOptions();
-	askForOutput();
 	showDartArt();
 	showTitle();
 	Sleep(1000);
@@ -49,7 +48,7 @@ Game::Game(int l_numOfPlayers, int l_matchesToPlay, MyGraphics l_graphics) :
 
 Game::~Game()
 {
-	std::cout << "Game object destroyed!\n";
+	//std::cout << "Game object destroyed!\n";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,21 +61,21 @@ void Game::printGameOptions()
 	do
 	{
 		std::cout << "Please choose from the following options:> \n"
-			<< "\t1. Fully automated simulated.\n"
-			<< "\t\t-	Simulation of a game of 501.\n"
+			<< "\t1. Fully automated simulation.\n"
+			<< "\t\t-	Simulation of a match of 501.\n"
 			<< "\t\t-	Two Players.\n"
 			<< "\t\t-	Pre-programmed success rates.\n"
-			<< "\t\t-	Printed output is your choice.\n"
+			<< "\t\t-	Printed output is your choice, remember 10,000 matches is ~ 500,000 games or legs.\n"
 			<< "\t2. Manual simulation.\n"
-			<< "\t\t-	Simulation of a game of 501.\n"
+			<< "\t\t-	Simulation of a match of 501.\n"
 			<< "\t\t-	Two Players.\n"
 			<< "\t\t-	User entered success rates.\n"
-			<< "\t\t-	Printed output is your choice.\n"
+			<< "\t\t-	Printed output is your choice, remember 10,000 matches is ~ 500,000 games or legs.\n"
 			<< "\t3. Interactive game.\n"
 			<< "\t\t-	Interactive game of 501.\n"
 			<< "\t\t-	Two players; User and Computer; User enters their own success rates.\n"
 			<< "\t\t-	Computer has pre-programmed success rates.\n"
-			<< "\t\t-	One Match (7 Lgs in a Set, 7 Sets in a Match).\n"
+			<< "\t\t-	One Match (3 Lgs in a Set, 7 Sets in a Match).\n"
 			<< "\t\t-	Printed output is always on.\n"
 			<< "\n:> ";
 
@@ -90,7 +89,7 @@ void Game::printGameOptions()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::askForOutput()
+void Game::askForOutput(int l_gameChoice)
 {
 	std::string ans;
 
@@ -109,9 +108,23 @@ void Game::askForOutput()
 	}
 	else if (ans == "n")
 	{
-		m_printOutput = false;
-		m_players[0].setPrintOutput(false);
-		m_players[1].setPrintOutput(false);
+		if (l_gameChoice == 3)
+		{
+			/*std::cin.clear();
+			std::cin.ignore(1000, '\n');*/		
+			std::cout << "\nYou are playing an interactive game, printing is always on!.\n";
+			Sleep(4000);
+
+			m_players[0].setPrintOutput(true);
+			m_players[1].setPrintOutput(true);
+			m_printOutput = true;
+		}
+		else
+		{
+			m_printOutput = false;
+			m_players[0].setPrintOutput(false);
+			m_players[1].setPrintOutput(false);
+		}	
 	}
 
 	m_graphics.publicClearScreenFull();
@@ -133,14 +146,13 @@ void Game::chooseGame(int l_gameChoice)
 		m_interactive = false;
 	}
 	else
-	{
-		m_printOutput = true;
-		m_players[0].setPrintOutput(true);
-		m_players[1].setPrintOutput(true);
+	{		
 		m_interactive = true;
 		m_matchesToPlay = 1;
 		initPlayers();
 	}
+
+	askForOutput(l_gameChoice);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -443,11 +455,8 @@ int Game::askPlayerForNum()
 	int innerBull = 25;
 	int outerBull = 50;
 
-	std::cout << "outside the do of ask player for num\n";
-
 	do
 	{
-		std::cout << "inside the do of ask player for num\n";
 		std::cout << "\nWhat number would you like to throw for, 1 - 20, 25 or 50:> ";
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
@@ -474,11 +483,8 @@ char Game::askPlayerForType()
 
 	char typeChoice;
 
-	std::cout << "outside the do of ask player for type\n";
-
 	do
 	{
-		std::cout << "inside the do of ask player for type\n";
 		std::cout << "\nWhat type, single, double, treble, will you throw for? please enter 's', 'd', 't':> ";
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
@@ -550,31 +556,6 @@ void Game::throwForFinish(Player& l_player, int& l_numberHit)
 		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
 	}
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//void Game::calculateRemainingScore(Player& l_player, int& l_numberHit, int& l_scoreRemaining)
-//{
-//	/*
-//	* This check is due to the fact that you need a score of 2 at the very min to be able to finish on double 1.
-//	*/
-//	if (((l_scoreRemaining - l_numberHit) < 2) && (l_scoreRemaining - l_numberHit) != 0)
-//	{
-//		l_player.setRemainingScore(l_player.getRemainingScore());	// Player must have bust, so score remains at whatever it was.
-//
-//		if (m_printOutput)
-//		{
-//			std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " BUST!  ##########\n";
-//		}
-//
-//	}
-//	else
-//	{
-//		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);				// Reduce score by number hit amount.
-//
-//		checkForWin(l_player);		
-//	}
-//}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
