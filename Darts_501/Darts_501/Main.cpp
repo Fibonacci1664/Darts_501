@@ -12,6 +12,7 @@
 // INCLUDES
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include "MyGraphics.h"
 #include "Level.h"
 #include "Game.h"
@@ -47,6 +48,8 @@ void windowProcess(sf::RenderWindow* window)
 // MAIN
 int main()
 {
+	//std::cout << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height;
+
 	static bool seeded = false;
 
 	// Ensure the seed only happens once.
@@ -58,7 +61,7 @@ int main()
 
 	//Create the window.
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "CHECKOUT TABLE");
-	window.setPosition(sf::Vector2i(1900 - WINDOW_WIDTH, 200));
+	window.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width - (WINDOW_WIDTH + 50), sf::VideoMode::getDesktopMode().height - (WINDOW_HEIGHT + 50)));
 
 	// Initialise input and level objects.
 	Level level(&window);
