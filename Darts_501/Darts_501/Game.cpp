@@ -561,8 +561,6 @@ void Game::throwForFinish(Player& l_player, int& l_numberHit)
 
 void Game::checkForWin(Player& l_player, int& l_numberHit)
 {
-	l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);				// Reduce score by number hit amount.
-
 	// Check if weve won (checked out).
 	if (l_player.getRemainingScore() == 0)		// We must have finshed.
 	{
