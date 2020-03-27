@@ -101,21 +101,34 @@ int Player::throwForBull(int l_throwingFor)
 	int randNum = rand() % 100 + 1;		// Generate a random number between 1 - 100.
 
 	// Prints the random number that was rolled if the user needs to check things are working correctly.
-	std::cout << m_name << "Throwing for " << l_throwingFor << '\n';
-	std::cout << m_name << "Random number rolled for : " << " = " << randNum << '\n';
+	if (m_printOutput)
+	{
+		std::cout << m_name << "Throwing for " << l_throwingFor << '\n';
+		std::cout << m_name << "Random number rolled for : " << " = " << randNum << '\n';
+	}	
 
 	if (l_throwingFor == 50)
 	{
 		if (randNum <= m_innerBullSuccessRate)
 		{
-			std::cout << m_name << " Dart number : " << getDartsThrownInRnd() << " scored a 50!\n";
+			if (m_printOutput)
+			{
+				std::cout << m_name << " Dart number : " << getDartsThrownInRnd() << " scored a 50!\n";
+			}
+
 			++m_numOfBullHit;
 			return 50;
 		}
 		else
 		{
 			int randTwenty = rand() % 20 + 1;
-			std::cout << m_name << " Missed a 50 and scored : " << randTwenty << '\n';
+
+			if (m_printOutput)
+			{
+				std::cout << m_name << " Missed a 50 and scored : " << randTwenty << '\n';
+
+			}
+
 			return randTwenty;				// Return a random num between 1 - 20.
 		}
 	}
@@ -123,13 +136,22 @@ int Player::throwForBull(int l_throwingFor)
 	{
 		if (randNum <= m_outerBullSuccessRate)
 		{
-			std::cout << m_name << " Dart number : " << getDartsThrownInRnd() << " scored a 25!\n";
+			if (m_printOutput)
+			{
+				std::cout << m_name << " Dart number : " << getDartsThrownInRnd() << " scored a 25!\n";
+			}
+
 			return 25;
 		}
 		else
 		{
 			int randTwenty = rand() % 20 + 1;
-			std::cout << m_name << " Missed a 50 and scored : " << randTwenty << '\n';
+
+			if (m_printOutput)
+			{
+				std::cout << m_name << " Missed a 50 and scored : " << randTwenty << '\n';
+			}
+
 			return randTwenty;				// Return a random num between 1 - 20.
 		}
 	}
@@ -145,7 +167,12 @@ int Player::throwForSingle(int l_throwingFor)
 
 	if (randNum <= m_singleSuccessRate)		// singlesuccesRate <= 80%
 	{
-		std::cout << m_name << " Dart number : " << getDartsThrownInRnd() << " Scored : " << l_throwingFor << '\n';	// NAILED IT!
+		if(m_printOutput)
+		{
+			std::cout << m_name << " Dart number : " << getDartsThrownInRnd() << " Scored : " << l_throwingFor << '\n';	// NAILED IT!
+
+		}
+
 		return l_throwingFor;
 	}
 	else if (randNum <= 90)					// Added another 10% to 90%, MISS 'LEFT', 81% - 90% is missing left.

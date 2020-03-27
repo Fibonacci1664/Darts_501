@@ -74,7 +74,7 @@ int main()
 		{
 			// Fixed at two players only. If more players are passed, this is checked and causes an error and the program to exit.
 			int numOfPlayers = 2;
-			int matchesToPlay = 10;
+			int matchesToPlay = 100;
 
 			/*
 			 * Create a game with 2 players to play 1000 games(not rounds), each game consists of xyz amount of rounds,
@@ -94,6 +94,8 @@ int main()
 				{
 					// Decide who goes first.
 					game.whoIsThrowingFirst();
+
+					std::cout << "Simulating, please wait...\n";
 				}
 
 				// MAIN GAME LOOP.

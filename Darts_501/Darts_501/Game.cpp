@@ -39,8 +39,8 @@ Game::Game(int l_numOfPlayers, int l_matchesToPlay, MyGraphics l_graphics) :
 		return;
 	}
 
-	askForOutput();
 	printGameOptions();
+	askForOutput();
 	showDartArt();
 	showTitle();
 	Sleep(1000);
@@ -56,29 +56,6 @@ Game::~Game()
 
 // FUNCTIONS.
 
-void Game::askForOutput()
-{
-	char ans;
-
-	do
-	{
-		std::cout << "Do you wish to see all output for each dart/throw, y/n:> ";		std::cin.clear();
-		std::cin.ignore(1000, '\n');
-		std::cin >> ans;
-	} while (!std::cin.good() || (ans != 'y' && ans != 'n'));
-
-	if (ans == 'y')
-	{
-		m_printOutput = true;
-	}
-	else if (ans == 'n')
-	{
-		m_printOutput = false;
-	}
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // This prints out the initial options for the player, allowing them to choose what kind of game they wish to play.
 void Game::printGameOptions()
 {
@@ -89,15 +66,18 @@ void Game::printGameOptions()
 			<< "\t\t-	Simulation of a game of 501.\n"
 			<< "\t\t-	Two Players.\n"
 			<< "\t\t-	Pre-programmed success rates.\n"
+			<< "\t\t-	Printed output is your choice.\n"
 			<< "\t2. Manual simulation.\n"
 			<< "\t\t-	Simulation of a game of 501.\n"
 			<< "\t\t-	Two Players.\n"
 			<< "\t\t-	User entered success rates.\n"
+			<< "\t\t-	Printed output is your choice.\n"
 			<< "\t3. Interactive game.\n"
 			<< "\t\t-	Interactive game of 501.\n"
 			<< "\t\t-	Two players; User and Computer; User enters their own success rates.\n"
 			<< "\t\t-	Computer has pre-programmed success rates.\n"
 			<< "\t\t-	One Match (7 Lgs in a Set, 7 Sets in a Match).\n"
+			<< "\t\t-	Printed output is always on.\n"
 			<< "\n:> ";
 
 		std::cin >> m_gameChoice;
@@ -106,6 +86,35 @@ void Game::printGameOptions()
 	} while (!std::cin.good() || (m_gameChoice > 3 || m_gameChoice < 1));
 
 	chooseGame(m_gameChoice);	
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::askForOutput()
+{
+	std::string ans;
+
+	do
+	{
+		std::cout << "Do you wish to see all output for each dart/throw, y/n:> ";
+		std::cin >> ans;
+	} while (ans != "y" && ans != "n");
+
+
+	if (ans == "y")
+	{
+		m_printOutput = true;
+		m_players[0].setPrintOutput(true);
+		m_players[1].setPrintOutput(true);
+	}
+	else if (ans == "n")
+	{
+		m_printOutput = false;
+		m_players[0].setPrintOutput(false);
+		m_players[1].setPrintOutput(false);
+	}
+
+	m_graphics.publicClearScreenFull();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,12 +134,13 @@ void Game::chooseGame(int l_gameChoice)
 	}
 	else
 	{
+		m_printOutput = true;
+		m_players[0].setPrintOutput(true);
+		m_players[1].setPrintOutput(true);
 		m_interactive = true;
 		m_matchesToPlay = 1;
 		initPlayers();
 	}
-
-	m_graphics.publicClearScreenFull();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -313,9 +323,12 @@ void Game::whoIsThrowingFirst()
 
 void Game::playDarts()
 {
-	std::cout << '\n';
-	std::cout << "\n##########  Game: " << getGamesPlayed() + 1 << "  ##########\n";
-	std::cout << '\n';
+	if (m_printOutput)
+	{
+		std::cout << '\n';
+		std::cout << "\n##########  Game: " << getGamesPlayed() + 1 << "  ##########\n";
+		std::cout << '\n';
+	}	
 
 	if (m_numOfPlayers == 1)
 	{
@@ -369,7 +382,10 @@ void Game::takeTurn(Player& l_player)
 {
 	if (l_player.getIsPlaying())
 	{
-		std::cout << "\n##########  " << l_player.getName() << " Turn " << "  ##########" << '\n';
+		if (m_printOutput)
+		{
+			std::cout << "\n##########  " << l_player.getName() << " Turn " << "  ##########" << '\n';
+		}
 
 		if (m_numOfPlayers > 1)
 		{
@@ -378,7 +394,10 @@ void Game::takeTurn(Player& l_player)
 			m_players[1].setIsPlaying(!m_players[1].getIsPlaying());
 		}
 
-		std::cout << l_player.getName() << " score : " << l_player.getRemainingScore() << '\n';
+		if (m_printOutput)
+		{
+			std::cout << l_player.getName() << " score : " << l_player.getRemainingScore() << '\n';
+		}
 
 		// Keep looping until we've thrown the amount of darts we're supposed to throw in each round i.e. 3.
 		while (l_player.getDartsThrownInRnd() < l_player.getNumOfDartsToThrow())
@@ -395,7 +414,9 @@ void Game::takeTurn(Player& l_player)
 			{
 				throwForFinish(l_player, numberHit);
 
-				calculateRemainingScore(l_player, numberHit, scoreRemaining);
+				checkForWin(l_player, numberHit);
+
+				//calculateRemainingScore(l_player, numberHit, scoreRemaining);
 
 				if (l_player.getHasWon())
 				{
@@ -403,7 +424,10 @@ void Game::takeTurn(Player& l_player)
 				}
 			}
 
-			std::cout << l_player.getName() << " remaining score : " << l_player.getRemainingScore() << '\n';
+			if (m_printOutput)
+			{
+				std::cout << l_player.getName() << " remaining score : " << l_player.getRemainingScore() << '\n';
+			}
 		}
 
 		l_player.setDartsThrownInRnd(0);		// Reset the amount of darts thrown.
@@ -476,14 +500,17 @@ void Game::throwForTrebleTwenties(Player& l_player, int& l_numberHit)
 		interactiveTypeChoice = askPlayerForType();
 
 		l_numberHit = l_player.throwDart(interactiveNumChoice, interactiveTypeChoice);
-		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
 		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);
 	}
 	else
 	{
 		l_numberHit = l_player.throwDart(20, 't');		// Throw for a treble 't' 20.
-		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
 		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);
+	}
+
+	if (m_printOutput)
+	{
+		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
 	}
 }
 
@@ -497,7 +524,6 @@ void Game::throwForFinish(Player& l_player, int& l_numberHit)
 		interactiveTypeChoice = askPlayerForType();
 
 		l_numberHit = l_player.throwDart(interactiveNumChoice, interactiveTypeChoice);
-		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
 		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);
 	}
 	else
@@ -512,40 +538,50 @@ void Game::throwForFinish(Player& l_player, int& l_numberHit)
 		if (!canFinish)
 		{
 			l_numberHit = l_player.throwDart(20, 't');
-			std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
 		}
 		else
 		{
 			l_numberHit = l_player.throwForFinish();
-			std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
 		}
 	}
-}
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void Game::calculateRemainingScore(Player& l_player, int& l_numberHit, int& l_scoreRemaining)
-{
-	/*
-	* This check is due to the fact that you need a score of 2 at the very min to be able to finish on double 1.
-	*/
-	if (((l_scoreRemaining - l_numberHit) < 2) && (l_scoreRemaining - l_numberHit) != 0)
+	if (m_printOutput)
 	{
-		l_player.setRemainingScore(l_player.getRemainingScore());	// Player must have bust, so score remains at whatever it was.
-		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " BUST!  ##########\n";
-	}
-	else
-	{
-		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);				// Reduce score by number hit amount.
-
-		checkForWin(l_player);		
+		std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " scored: " << l_numberHit << '\n';
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Game::checkForWin(Player& l_player)
+//void Game::calculateRemainingScore(Player& l_player, int& l_numberHit, int& l_scoreRemaining)
+//{
+//	/*
+//	* This check is due to the fact that you need a score of 2 at the very min to be able to finish on double 1.
+//	*/
+//	if (((l_scoreRemaining - l_numberHit) < 2) && (l_scoreRemaining - l_numberHit) != 0)
+//	{
+//		l_player.setRemainingScore(l_player.getRemainingScore());	// Player must have bust, so score remains at whatever it was.
+//
+//		if (m_printOutput)
+//		{
+//			std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " BUST!  ##########\n";
+//		}
+//
+//	}
+//	else
+//	{
+//		l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);				// Reduce score by number hit amount.
+//
+//		checkForWin(l_player);		
+//	}
+//}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Game::checkForWin(Player& l_player, int& l_numberHit)
 {
+	l_player.setRemainingScore(l_player.getRemainingScore() - l_numberHit);				// Reduce score by number hit amount.
+
 	// Check if weve won (checked out).
 	if (l_player.getRemainingScore() == 0)		// We must have finshed.
 	{
@@ -569,6 +605,16 @@ void Game::checkForWin(Player& l_player)
 		checkLegsWon(l_player);
 
 		l_player.increment_N_DartFinishes();
+	}
+	else if (l_player.getRemainingScore() < 2)			// If we get this far we know the score IS NOT zero, therefore if its NOT zero but still < 2 it must be either, 1 or a negative number, in which case reset score.
+	{
+		l_player.setRemainingScore(l_player.getRemainingScore() + l_numberHit);				// Reset score back to what it was by adding number hit back on.
+
+		// Lots of hashes, so one can easily see in the printed output where the busts happened and check the arithmetic is correct.
+		if (m_printOutput)
+		{
+			std::cout << "Dart number " << l_player.getDartsThrownInRnd() << " BUST!  ##################################################################################\n";
+		}
 	}
 }
 
@@ -650,11 +696,11 @@ void Game::checkSetsWon(Player& l_player)
 void Game::determineWinner()
 {
 	// Who has won.
-	if (m_players[0].getHasWon())
+	if (m_players[0].getHasWon() && m_printOutput)
 	{
 		std::cout << "\n##########  " << m_players[0].getName() << " HAS WON!  ##########\n";
 	}
-	else if (m_players[1].getHasWon())
+	else if (m_players[1].getHasWon() && m_printOutput)
 	{
 		std::cout << "\n##########  " << m_players[1].getName() << " HAS WON!  ##########\n";
 	}

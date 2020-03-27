@@ -90,7 +90,7 @@ private:
 	void throwForTrebleTwenties(Player& l_player, int& l_numberHit);
 	void throwForFinish(Player& l_player, int& l_numberHit);
 	void calculateRemainingScore(Player& l_player, int& l_numberHit, int& l_scoreRemaining);
-	void checkForWin(Player& l_player);
+	void checkForWin(Player& l_player, int& l_numberHit);
 	void checkLegsWon(Player& l_player);
 	void checkSetsWon(Player& l_player);
 
