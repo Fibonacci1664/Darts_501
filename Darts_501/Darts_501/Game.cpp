@@ -95,7 +95,7 @@ void Game::askForOutput(int l_gameChoice)
 
 	do
 	{
-		std::cout << "Do you wish to see all output for each dart/throw, y/n:> ";
+		std::cout << "\nDo you wish to see all output for each dart/throw, y/n:> ";
 		std::cin >> ans;
 	} while (ans != "y" && ans != "n");
 
@@ -720,7 +720,7 @@ void Game::printMatchResults()
 
 	std::cout << "\nComplete matches played : " << m_matchesPlayed << " over : " << getGamesPlayed() << " indivdual 501 games or legs.\n";
 
-	std::cout << "\n\t" << m_players[0].getName() << "\t : \t" << m_players[1].getName() << "\t\t Occurence/Tally" << "\t\t Percentage frequency\n";
+	std::cout << "\n\t" << m_players[0].getName() << "\t : \t" << m_players[1].getName() << "\t\t Occurrence/Tally" << "\t\t Percentage frequency\n";
 
 	// Loop over all match results calculating and printing each result and the frequency of occurence.
 	for (int i = 0; i < m_matchResults.size(); ++i)
