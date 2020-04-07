@@ -39,10 +39,7 @@ public:
 	void publicSetColor(int foreColor, int backColor);
 	void publicDrawString(int& x, int y, std::string str);
 	bool publicClearTitleScreen();
-	void publicClearGameOverScreen();
 	void publicClearScreenFull();
-	void publicClearScreenHalf();
-	void clearCheckOutTable();
 
 private:
 	// MEMBER FUNCTIONS
@@ -51,7 +48,5 @@ private:
 	void setColor(int foreColor, int backColor);
 	void drawString(int& x, int y, std::string str);
 	bool clearTitleScreen();
-	void clearGameOverScreen();
 	void clearScreenFull();
-	void clearScreenHalf();
 };
